@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vigenere_cipher", "Vigenere_cipher.csproj", "{CB1ED288-F292-488F-B907-CF0EE817CE5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationL", "ApplicationL.csproj", "{CB1ED288-F292-488F-B907-CF0EE817CE5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
