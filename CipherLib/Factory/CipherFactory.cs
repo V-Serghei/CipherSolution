@@ -10,6 +10,8 @@ namespace CipherLib.Factory
             {
                 case "vigenere":
                     return new VigenereCipher(key);
+                case "beaufort":
+                    return new BeaufortCipher(key);
                 
                 //TODO: ADD OTHER CIPHERS
                 

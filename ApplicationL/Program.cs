@@ -17,12 +17,19 @@ namespace ApplicationL
             {
                 Console.WriteLine("Select encryption algorithm:");
                 Console.WriteLine("1. Vigenère cipher");
+                Console.WriteLine("2. Beaufort cipher");
                 choice = Console.ReadLine();
                 if (choice == "1")
                 {
                     Console.Write("Enter the key: ");
                     key = Console.ReadLine();
                     cipher = CipherFactory.CreateCipher("vigenere", key);
+                }
+                else if (choice == "2")
+                {
+                    Console.Write("Enter the key: ");
+                    key = Console.ReadLine();
+                    cipher = CipherFactory.CreateCipher("beaufort", key);
                 }
                 else if (choice == "0")
                 {
