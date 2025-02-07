@@ -8,14 +8,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9188027-c8bf-4061-b534-a057426e1363" name="Changes" comment="Edit name proj">
-      <change afterPath="$PROJECT_DIR$/CipherLib/CipherCore/VigenereCipher.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CipherLib/ConstVal/Alphabet.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CipherLib/Factory/CipherFactory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CipherLib/ICipher.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CipherLib/Service/CipherService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CipherSolution/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CipherSolution.sln" beforeDir="false" afterPath="$PROJECT_DIR$/CipherSolution.sln" afterDir="false" />
+    <list default="true" id="e9188027-c8bf-4061-b534-a057426e1363" name="Changes" comment="Beaufort cipher implementation">
+      <change afterPath="$PROJECT_DIR$/CipherLib/CipherCore/AutoKeyCipher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Vigenere_cipher/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Vigenere_cipher/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ApplicationL/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ApplicationL/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CipherLib/Factory/CipherFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CipherLib/Factory/CipherFactory.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +122,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1738863836067</updated>
-      <workItem from="1738863837093" duration="3593000" />
+      <workItem from="1738863837093" duration="6560000" />
     </task>
     <task id="LOCAL-00001" summary="Edit name proj">
       <option name="closed" value="true" />
@@ -135,7 +132,23 @@
       <option name="project" value="LOCAL" />
       <updated>1738863906152</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Code splitting, pattern insertion. Console interface">
+      <option name="closed" value="true" />
+      <created>1738879265161</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1738879265161</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Beaufort cipher implementation">
+      <option name="closed" value="true" />
+      <created>1738881246089</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1738881246089</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,6 +159,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Edit name proj" />
-    <option name="LAST_COMMIT_MESSAGE" value="Edit name proj" />
+    <MESSAGE value="Code splitting, pattern insertion. Console interface" />
+    <MESSAGE value="Beaufort cipher implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Beaufort cipher implementation" />
   </component>
 </project>
