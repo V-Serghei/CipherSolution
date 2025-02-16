@@ -2,6 +2,7 @@
 using CipherLib;
 using CipherLib.Factory;
 using CipherLib.Service;
+using Logging;
 
 namespace ApplicationL
 {
@@ -9,7 +10,8 @@ namespace ApplicationL
     {
         static void Main(string[] args)
         {
-            
+            var logger = ProcessLogger.Instance;
+            var errorLogger = ErrorLogger.Instance;
             ICipher cipher = null!;
             var key = ""; 
             
@@ -26,6 +28,7 @@ namespace ApplicationL
                     string? choice = Console.ReadLine();
                     if (choice == "0")
                     {
+                        logger.Log("Exit");
                         return;
                     }
 
@@ -37,14 +40,14 @@ namespace ApplicationL
                         }
 
                         CipherCreator creator = CipherFactory.GetCipherCreator(choice);
-
+                        logger.Log("Cipher created", choice);
                         Console.WriteLine("Enter the key:");
                         key = Console.ReadLine();
                         if (string.IsNullOrEmpty(key))
                         {
                             throw new InvalidKeyException("Invalid key");
                         }
-
+                        logger.Log("Cipher created", key);
                         cipher = creator.CreateCipher(key);
                         break;
 
@@ -53,17 +56,21 @@ namespace ApplicationL
                     {
                         Console.WriteLine("!!!!Wrong choice!!!!");
                         Console.WriteLine("If you want to exit, enter 0.");
+                        errorLogger.LogError(exception.Message, exception);
                     }
                     catch (InvalidKeyException exception)
                     {
                         Console.WriteLine("!!!!Wrong key!!!!");
                         Console.WriteLine("If you want to exit, enter 0.");
                         Console.WriteLine(exception);
+                        errorLogger.LogError(exception.Message, exception);
+
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine("An unexpected error occurred:");
                         Console.WriteLine(ex);
+                        errorLogger.LogError(ex.Message, ex);
                     }
                     
                     
@@ -83,7 +90,11 @@ namespace ApplicationL
                     var input = Console.ReadLine();
                     string? text = null;
                     if (input == "0")
+                    {
+                        logger.Log("Exit");
                         break;
+                    }
+
                     try
                     {
 
@@ -105,8 +116,10 @@ namespace ApplicationL
                                 if (string.IsNullOrEmpty(key))
                                     throw new InvalidKeyException("Invalid key");
                                 cipher.SetKey(key);
+                                logger.Log("Key changed", key);
                                 break;
                             case "00":
+                                logger.Log("Cipher changed");
                                 goto choiceCipher;
                             default:
                                 Console.WriteLine("!!!!!!!Invalid command!!!!!!!!!");
@@ -114,7 +127,7 @@ namespace ApplicationL
                         }
 
 
-                        if (input != "3")
+                        if (input != "3" && !string.IsNullOrEmpty(input) && input is "1" or "2")
                         {
                             text = Console.ReadLine();
                             if (string.IsNullOrEmpty(text))
@@ -128,12 +141,14 @@ namespace ApplicationL
                                 {
                                     var encrypted = service.EncryptText(text);
                                     Console.WriteLine($"Encrypted text: {encrypted}");
+                                    logger.Log("Text encrypted", text);
                                     break;
                                 }
                                 case "2":
                                 {
                                     var decrypted = service.DecryptText(text);
                                     Console.WriteLine($"Decrypted text: {decrypted}");
+                                    logger.Log("Text decrypted", text);
                                     break;
                                 }
                             }
@@ -145,17 +160,23 @@ namespace ApplicationL
                         Console.WriteLine("!!!!Wrong text!!!!");
                         Console.WriteLine("If you want to exit, enter 0.");
                         Console.WriteLine(exception);
+                        errorLogger.LogError(exception.Message, exception);
+
                     }
                     catch (InvalidKeyException exception)
                     {
                         Console.WriteLine("!!!!Wrong key!!!!");
                         Console.WriteLine("If you want to exit, enter 0.");
                         Console.WriteLine(exception);
+                        errorLogger.LogError(exception.Message, exception);
+
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine("An unexpected error occurred:");
                         Console.WriteLine(ex);
+                        errorLogger.LogError(ex.Message, ex);
+
                     }
                 }
         }
