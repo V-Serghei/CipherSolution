@@ -1,23 +1,25 @@
-﻿using CipherLib.CipherCore;
+﻿using CipherLib.Factory.Creators;
 
 namespace CipherLib.Factory
 {
     public static class CipherFactory
     {
-        public static ICipher CreateCipher(string type, string key)
+        public static CipherCreator GetCipherCreator(string choice)
         {
-            switch (type.ToLower())
+            switch (choice)
             {
+                case "1":
                 case "vigenere":
-                    return new VigenereCipher(key);
+                    return new VigenereCipherCreator();
+                case "2":
                 case "beaufort":
-                    return new BeaufortCipher(key);
+                    return new BeaufortCipherCreator();
+                case "3":
                 case "autokey":
-                    return new AutoKeyCipher(key);
+                    return new AutoKeyCipherCreator();
+                case "4":
                 case "runningkey":
-                    return new RunningKeyCipher(key);
-                //TODO: ADD OTHER CIPHERS
-                
+                    return new RunningKeyCipherCreator();
                 default:
                     throw new ArgumentException("Unknown cipher type");
             }

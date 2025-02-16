@@ -1,4 +1,5 @@
-﻿using CipherLib;
+﻿using ApplicationL.CustomExceptions;
+using CipherLib;
 using CipherLib.Factory;
 using CipherLib.Service;
 
@@ -8,11 +9,11 @@ namespace ApplicationL
     {
         static void Main(string[] args)
         {
-           
             
-            string? choice = null;
-            ICipher cipher = null;
-            string key = ""; 
+            ICipher cipher = null!;
+            var key = ""; 
+            
+            // choiceCipher - is goto label for switch cipher
             choiceCipher:
             
                 do
@@ -22,42 +23,51 @@ namespace ApplicationL
                     Console.WriteLine("2. Beaufort cipher");
                     Console.WriteLine("3. Autokey cipher");
                     Console.WriteLine("4. Running key cipher");
-                    choice = Console.ReadLine();
-                    if (choice == "1")
-                    {
-                        Console.Write("Enter the key: ");
-                        key = Console.ReadLine();
-                        cipher = CipherFactory.CreateCipher("vigenere", key);
-                    }
-                    else if (choice == "2")
-                    {
-                        Console.Write("Enter the key: ");
-                        key = Console.ReadLine();
-                        cipher = CipherFactory.CreateCipher("beaufort", key);
-                    }
-                    else if (choice == "3")
-                    {
-                        Console.Write("Enter the key: ");
-                        key = Console.ReadLine();
-                        cipher = CipherFactory.CreateCipher("autokey", key);
-                    }
-                    else if (choice == "4")
-                    {
-                        Console.Write("Enter the key: ");
-                        key = Console.ReadLine();
-                        cipher = CipherFactory.CreateCipher("runningkey", key);
-                    }
-                    else if (choice == "0")
+                    string? choice = Console.ReadLine();
+                    if (choice == "0")
                     {
                         return;
                     }
-                    else
+
+                    try
+                    {
+                        if (string.IsNullOrEmpty(choice))
+                        {
+                            throw new InvalidCipherChoiceException("Invalid cipher choice");
+                        }
+
+                        CipherCreator creator = CipherFactory.GetCipherCreator(choice);
+
+                        Console.WriteLine("Enter the key:");
+                        key = Console.ReadLine();
+                        if (string.IsNullOrEmpty(key))
+                        {
+                            throw new InvalidKeyException("Invalid key");
+                        }
+
+                        cipher = creator.CreateCipher(key);
+                        break;
+
+                    }
+                    catch (InvalidCipherChoiceException exception)
                     {
                         Console.WriteLine("!!!!Wrong choice!!!!");
-                        choice = null;
                         Console.WriteLine("If you want to exit, enter 0.");
                     }
-                }while (choice == null);
+                    catch (InvalidKeyException exception)
+                    {
+                        Console.WriteLine("!!!!Wrong key!!!!");
+                        Console.WriteLine("If you want to exit, enter 0.");
+                        Console.WriteLine(exception);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("An unexpected error occurred:");
+                        Console.WriteLine(ex);
+                    }
+                    
+                    
+                } while (true);
 
                 var service = new CipherService(cipher);
                 
@@ -74,35 +84,78 @@ namespace ApplicationL
                     string? text = null;
                     if (input == "0")
                         break;
-                   
-                    
-                    if (input == "1")
+                    try
                     {
-                        Console.Write("Enter the text: ");
-                        text = Console.ReadLine();
-                        var encrypted = service.EncryptText(text);
-                        Console.WriteLine($"Encrypted text: {encrypted}");
+
+                        switch (input)
+                        {
+                            case "1":
+                            {
+                                Console.Write("Enter the text: ");
+                                break;
+                            }
+                            case "2":
+                            {
+                                Console.Write("Enter encrypted text: ");
+                                break;
+                            }
+                            case "3":
+                                Console.Write("Enter new key: ");
+                                key = Console.ReadLine();
+                                if (string.IsNullOrEmpty(key))
+                                    throw new InvalidKeyException("Invalid key");
+                                cipher.SetKey(key);
+                                break;
+                            case "00":
+                                goto choiceCipher;
+                            default:
+                                Console.WriteLine("!!!!!!!Invalid command!!!!!!!!!");
+                                break;
+                        }
+
+
+                        if (input != "3")
+                        {
+                            text = Console.ReadLine();
+                            if (string.IsNullOrEmpty(text))
+                            {
+                                throw new InvalidTextException("Invalid text");
+                            }
+
+                            switch (input)
+                            {
+                                case "1":
+                                {
+                                    var encrypted = service.EncryptText(text);
+                                    Console.WriteLine($"Encrypted text: {encrypted}");
+                                    break;
+                                }
+                                case "2":
+                                {
+                                    var decrypted = service.DecryptText(text);
+                                    Console.WriteLine($"Decrypted text: {decrypted}");
+                                    break;
+                                }
+                            }
+                        }
+
                     }
-                    else if (input == "2")
+                    catch (InvalidTextException exception)
                     {
-                        Console.Write("Enter encrypted text: ");
-                        text = Console.ReadLine();
-                        var decrypted = service.DecryptText(text);
-                        Console.WriteLine($"Decrypted text: {decrypted}");
+                        Console.WriteLine("!!!!Wrong text!!!!");
+                        Console.WriteLine("If you want to exit, enter 0.");
+                        Console.WriteLine(exception);
                     }
-                    else if (input == "3")
+                    catch (InvalidKeyException exception)
                     {
-                        Console.Write("Enter new key: ");
-                        key = Console.ReadLine();
-                        cipher.SetKey(key);
+                        Console.WriteLine("!!!!Wrong key!!!!");
+                        Console.WriteLine("If you want to exit, enter 0.");
+                        Console.WriteLine(exception);
                     }
-                    else if (input == "00")
+                    catch (Exception ex)
                     {
-                        goto choiceCipher;
-                    }
-                    else
-                    {
-                        Console.WriteLine("!!!!!!!Invalid command!!!!!!!!!");
+                        Console.WriteLine("An unexpected error occurred:");
+                        Console.WriteLine(ex);
                     }
                 }
         }
