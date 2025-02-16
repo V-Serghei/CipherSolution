@@ -1,6 +1,10 @@
-﻿using CipherLib;
+﻿using ApplicationL.CustomExceptions;
+using CipherLib;
+using CipherLib.Builder;
+using CipherLib.ConstVal;
 using CipherLib.Factory;
 using CipherLib.Service;
+using Logging;
 
 namespace ApplicationL
 {
@@ -8,103 +12,24 @@ namespace ApplicationL
     {
         static void Main(string[] args)
         {
-           
             
-            string? choice = null;
-            ICipher cipher = null;
-            string key = ""; 
-            choiceCipher:
+            Console.WriteLine("Select the mode:");
+            Console.WriteLine("1. Use ready algorithm (factory)");
+            Console.WriteLine("2. Builder mode (manually configure algorithm)");
+            string? mode = Console.ReadLine();
+            ICipher cipher = null!;
+
+            if (mode == "2")
+            {
+                BuilderModeUse builderModeUse = new BuilderModeUse();
+                builderModeUse.Run();
             
-                do
-                {
-                    Console.WriteLine("Select encryption algorithm:");
-                    Console.WriteLine("1. Vigenère cipher");
-                    Console.WriteLine("2. Beaufort cipher");
-                    Console.WriteLine("3. Autokey cipher");
-                    Console.WriteLine("4. Running key cipher");
-                    choice = Console.ReadLine();
-                    if (choice == "1")
-                    {
-                        Console.Write("Enter the key: ");
-                        key = Console.ReadLine();
-                        cipher = CipherFactory.CreateCipher("vigenere", key);
-                    }
-                    else if (choice == "2")
-                    {
-                        Console.Write("Enter the key: ");
-                        key = Console.ReadLine();
-                        cipher = CipherFactory.CreateCipher("beaufort", key);
-                    }
-                    else if (choice == "3")
-                    {
-                        Console.Write("Enter the key: ");
-                        key = Console.ReadLine();
-                        cipher = CipherFactory.CreateCipher("autokey", key);
-                    }
-                    else if (choice == "4")
-                    {
-                        Console.Write("Enter the key: ");
-                        key = Console.ReadLine();
-                        cipher = CipherFactory.CreateCipher("runningkey", key);
-                    }
-                    else if (choice == "0")
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        Console.WriteLine("!!!!Wrong choice!!!!");
-                        choice = null;
-                        Console.WriteLine("If you want to exit, enter 0.");
-                    }
-                }while (choice == null);
-
-                var service = new CipherService(cipher);
-                
-                while (true)
-                {
-                    Console.WriteLine("\nSelect an action:");
-                    Console.WriteLine("1. Encrypt text");
-                    Console.WriteLine("2. Decipher the text");
-                    Console.WriteLine("3. Change key");
-                    Console.WriteLine("0. Exit");
-                    Console.WriteLine("00. Choose cipher");
-
-                    var input = Console.ReadLine();
-                    string? text = null;
-                    if (input == "0")
-                        break;
-                   
-                    
-                    if (input == "1")
-                    {
-                        Console.Write("Enter the text: ");
-                        text = Console.ReadLine();
-                        var encrypted = service.EncryptText(text);
-                        Console.WriteLine($"Encrypted text: {encrypted}");
-                    }
-                    else if (input == "2")
-                    {
-                        Console.Write("Enter encrypted text: ");
-                        text = Console.ReadLine();
-                        var decrypted = service.DecryptText(text);
-                        Console.WriteLine($"Decrypted text: {decrypted}");
-                    }
-                    else if (input == "3")
-                    {
-                        Console.Write("Enter new key: ");
-                        key = Console.ReadLine();
-                        cipher.SetKey(key);
-                    }
-                    else if (input == "00")
-                    {
-                        goto choiceCipher;
-                    }
-                    else
-                    {
-                        Console.WriteLine("!!!!!!!Invalid command!!!!!!!!!");
-                    }
-                }
+            }
+            else
+            {
+                FactoryUse factoryUse = new FactoryUse();
+                factoryUse.Run();
+            }
         }
     }
 }

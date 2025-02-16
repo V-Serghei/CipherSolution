@@ -1,4 +1,5 @@
 ﻿using CipherLib.ConstVal;
+using CipherLib.Entities;
 
 namespace CipherLib.CipherCore
 {
@@ -6,6 +7,8 @@ namespace CipherLib.CipherCore
     {
         private string _runningKey;
         private char[] _alphabet;
+        private bool _enableErrorLogging = false;
+        private bool _enableProcessLogging = false;
 
         private char[] DetermineAlphabet(string text)
         {
@@ -13,10 +16,106 @@ namespace CipherLib.CipherCore
             return containsRussian ? Alphabet.Default.RusAlphabet : Alphabet.Default.EngAlphabet;
         }
 
-        public RunningKeyCipher(string runningKey)
+        public RunningKeyCipher(string runningKey,  CipherOptions? options = null)
         {
             _runningKey = runningKey;
-            _alphabet = DetermineAlphabet(runningKey);
+            if (!options.UseExplicitAlphabet)
+            {
+                _alphabet = DetermineAlphabet(runningKey);
+            }
+            else
+            {
+                switch (options.AlphabetVariant.ToLower())
+                {
+                    case "rus":
+                        _alphabet = Alphabet.Default.RusAlphabet;
+                        break;
+                    case "eng":
+                        _alphabet = Alphabet.Default.EngAlphabet;
+                        break;
+                    case "rus+eng":
+                        _alphabet = Alphabet.Default.RusEngAlphabet;
+                        break;
+                    case "rus+num":
+                        if (options.AllowNumbers)
+                        {
+                            _alphabet = Alphabet.Default.RusAlphabetWithNumbers;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Numbers are not allowed in this variant.");
+                        }
+                        break;
+                    case "eng+num":
+                        if (options.AllowNumbers)
+                        {
+                            _alphabet = Alphabet.Default.EngAlphabetWithNumbers;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Numbers are not allowed in this variant.");
+                        }
+                        
+                        break;
+                    case "rus+sym":
+                        if (options.AllowSymbols)
+                        {
+                            _alphabet = Alphabet.Default.RusAlphabetWithSymbols;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Symbols are not allowed in this variant.");
+                        }
+                        break;
+                    case "eng+sym":
+                        if (options.AllowSymbols)
+                        {
+                            _alphabet = Alphabet.Default.EngAlphabetWithSymbols;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Symbols are not allowed in this variant.");
+                        }
+                        break;
+                    case "rus+num+sym":
+                        if (options is { AllowSymbols: true, AllowNumbers: true })
+                        {
+                            _alphabet = Alphabet.Default.RusAlphabetWithNumbersAndSymbols;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Symbols and Numbers are not allowed in this variant.");
+                        }
+                        break;
+                    case "eng+num+sym":
+                        if (options is { AllowSymbols: true, AllowNumbers: true })
+                        {
+                            _alphabet = Alphabet.Default.EngAlphabetWithNumbersAndSymbols;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Symbols and Numbers are not allowed in this variant.");
+                        }
+                        break;
+                    case "rus+eng+num+sym":
+                        if (options is { AllowSymbols: true, AllowNumbers: true })
+                        {
+                            _alphabet = Alphabet.Default.EngRusAlphabetWithNumbersAndSymbols;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Symbols and Numbers are not allowed in this variant.");
+                        }
+                        
+                        break;
+                    default:
+                        _alphabet = Alphabet.Default.EngAlphabet;
+                        break;
+                }
+
+                _enableErrorLogging = options.ErrorLogging;
+                _enableProcessLogging = options.ProcessLogging;
+            }
         }
 
         public string Encrypt(string plaintext)

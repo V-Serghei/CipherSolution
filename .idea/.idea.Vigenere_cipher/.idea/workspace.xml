@@ -8,11 +8,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9188027-c8bf-4061-b534-a057426e1363" name="Changes" comment="Beaufort cipher implementation">
-      <change afterPath="$PROJECT_DIR$/CipherLib/CipherCore/AutoKeyCipher.cs" afterDir="false" />
+    <list default="true" id="e9188027-c8bf-4061-b534-a057426e1363" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Vigenere_cipher/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Vigenere_cipher/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApplicationL/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ApplicationL/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CipherLib/Factory/CipherFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CipherLib/Factory/CipherFactory.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +119,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1738863836067</updated>
-      <workItem from="1738863837093" duration="6560000" />
+      <workItem from="1738863837093" duration="6980000" />
     </task>
     <task id="LOCAL-00001" summary="Edit name proj">
       <option name="closed" value="true" />
@@ -148,7 +145,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738881246089</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Autokey cipher and Running key cipher">
+      <option name="closed" value="true" />
+      <created>1738883382651</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1738883382651</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,6 +166,7 @@
     <MESSAGE value="Edit name proj" />
     <MESSAGE value="Code splitting, pattern insertion. Console interface" />
     <MESSAGE value="Beaufort cipher implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Beaufort cipher implementation" />
+    <MESSAGE value="Autokey cipher and Running key cipher" />
+    <option name="LAST_COMMIT_MESSAGE" value="Autokey cipher and Running key cipher" />
   </component>
 </project>

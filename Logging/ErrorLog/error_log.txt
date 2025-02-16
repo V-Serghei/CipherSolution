@@ -1,0 +1,20 @@
+[ERROR] 2025-02-16 13:55:53.553 - Message: Unknown cipher type - Exception: System.ArgumentException - Unknown cipher type
+StackTrace:    at CipherLib.Factory.CipherFactory.GetCipherCreator(String choice) in C:\Users\Ричи\RiderProjects\CipherSolution\CipherLib\Factory\CipherFactory.cs:line 24
+   at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 42
+
+[ERROR] 2025-02-16 13:56:00.962 - Message: Unknown cipher type - Exception: System.ArgumentException - Unknown cipher type
+StackTrace:    at CipherLib.Factory.CipherFactory.GetCipherCreator(String choice) in C:\Users\Ричи\RiderProjects\CipherSolution\CipherLib\Factory\CipherFactory.cs:line 24
+   at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 42
+
+[ERROR] 2025-02-16 13:56:06.418 - Message: Invalid key - Exception: ApplicationL.CustomExceptions.InvalidKeyException - Invalid key
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 48
+
+[ERROR] 2025-02-16 13:58:36.329 - Message: Invalid text - Exception: ApplicationL.CustomExceptions.InvalidTextException - Invalid text
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 135
+
+[ERROR] 2025-02-16 13:58:38.434 - Message: Invalid text - Exception: ApplicationL.CustomExceptions.InvalidTextException - Invalid text
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 135
+
+[ERROR] 2025-02-16 13:58:40.878 - Message: Invalid key - Exception: ApplicationL.CustomExceptions.InvalidKeyException - Invalid key
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 117
+

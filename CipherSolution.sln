@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherTests", "CipherTests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationL", "ApplicationL\ApplicationL.csproj", "{A6A3C31D-09FD-4DB6-BEB8-58C9DDCADD94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Logging\Logging.csproj", "{CA31E816-5F12-4925-8468-169A1A9020B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{A6A3C31D-09FD-4DB6-BEB8-58C9DDCADD94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6A3C31D-09FD-4DB6-BEB8-58C9DDCADD94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6A3C31D-09FD-4DB6-BEB8-58C9DDCADD94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA31E816-5F12-4925-8468-169A1A9020B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA31E816-5F12-4925-8468-169A1A9020B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA31E816-5F12-4925-8468-169A1A9020B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA31E816-5F12-4925-8468-169A1A9020B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
