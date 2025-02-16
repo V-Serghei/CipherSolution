@@ -8,9 +8,9 @@ namespace ApplicationL;
 
 public class FactoryUse()
 {
-    public static ProcessLogger logger = ProcessLogger.Instance;
-    public static ErrorLogger errorLogger = ErrorLogger.Instance;
-    public static string key = "";
+    private static readonly ProcessLogger logger = ProcessLogger.Instance;
+    private static readonly ErrorLogger errorLogger = ErrorLogger.Instance;
+    private static string _key = "";
     private ICipher _cipher  = null!;
 
 
@@ -44,14 +44,14 @@ public class FactoryUse()
                 CipherCreator creator = CipherFactory.GetCipherCreator(choice);
                 logger.Log("Cipher created", choice);
                 Console.WriteLine("Enter the key:");
-                key = Console.ReadLine();
-                if (string.IsNullOrEmpty(key))
+                _key = Console.ReadLine();
+                if (string.IsNullOrEmpty(_key))
                 {
                     throw new InvalidKeyException("Invalid key");
                 }
 
-                logger.Log("Cipher created", key);
-                _cipher = creator.CreateCipher(key);
+                logger.Log("Cipher created", _key);
+                _cipher = creator.CreateCipher(_key);
                 break;
 
             }
@@ -115,11 +115,11 @@ public class FactoryUse()
                     }
                     case "3":
                         Console.Write("Enter new key: ");
-                        key = Console.ReadLine();
-                        if (string.IsNullOrEmpty(key))
+                        _key = Console.ReadLine();
+                        if (string.IsNullOrEmpty(_key))
                             throw new InvalidKeyException("Invalid key");
-                        _cipher.SetKey(key);
-                        logger.Log("Key changed", key);
+                        _cipher.SetKey(_key);
+                        logger.Log("Key changed", _key);
                         break;
                     case "00":
                         logger.Log("Cipher changed");
