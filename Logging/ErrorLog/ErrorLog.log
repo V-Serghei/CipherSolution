@@ -16,3 +16,13 @@ StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\
 [ERROR] 2025-02-16 14:30:53.719 - Message: Invalid cipher choice - Exception: ApplicationL.CustomExceptions.InvalidCipherChoiceException - Invalid cipher choice
 StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 39
 
+[ERROR] 2025-02-17 00:16:57.128 - Message: Object reference not set to an instance of an object. - Exception: System.NullReferenceException - Object reference not set to an instance of an object.
+StackTrace:    at CipherLib.CipherCore.VigenereCipher..ctor(String key, CipherOptions options) in C:\Users\Ричи\RiderProjects\CipherSolution\CipherLib\CipherCore\VigenereCipher.cs:line 21
+   at CipherLib.Factory.Creators.VigenereCipherCreator.CreateCipher(String key) in C:\Users\Ричи\RiderProjects\CipherSolution\CipherLib\Factory\Creators\VigenereCipherCreator.cs:line 7
+   at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 153
+
+[ERROR] 2025-02-17 00:21:33.452 - Message: Object reference not set to an instance of an object. - Exception: System.NullReferenceException - Object reference not set to an instance of an object.
+StackTrace:    at CipherLib.CipherCore.VigenereCipher..ctor(String key, CipherOptions options) in C:\Users\Ричи\RiderProjects\CipherSolution\CipherLib\CipherCore\VigenereCipher.cs:line 21
+   at CipherLib.Factory.Creators.VigenereCipherCreator.CreateCipher(String key) in C:\Users\Ричи\RiderProjects\CipherSolution\CipherLib\Factory\Creators\VigenereCipherCreator.cs:line 7
+   at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 155
+
