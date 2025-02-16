@@ -1,0 +1,18 @@
+[ERROR] 2025-02-16 14:30:10.192 - Message: Invalid cipher choice - Exception: ApplicationL.CustomExceptions.InvalidCipherChoiceException - Invalid cipher choice
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 39
+
+[ERROR] 2025-02-16 14:30:21.000 - Message: Invalid text - Exception: ApplicationL.CustomExceptions.InvalidTextException - Invalid text
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 135
+
+[ERROR] 2025-02-16 14:30:47.020 - Message: Invalid text - Exception: ApplicationL.CustomExceptions.InvalidTextException - Invalid text
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 135
+
+[ERROR] 2025-02-16 14:30:48.263 - Message: Invalid text - Exception: ApplicationL.CustomExceptions.InvalidTextException - Invalid text
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 135
+
+[ERROR] 2025-02-16 14:30:49.393 - Message: Invalid key - Exception: ApplicationL.CustomExceptions.InvalidKeyException - Invalid key
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 117
+
+[ERROR] 2025-02-16 14:30:53.719 - Message: Invalid cipher choice - Exception: ApplicationL.CustomExceptions.InvalidCipherChoiceException - Invalid cipher choice
+StackTrace:    at ApplicationL.Program.Main(String[] args) in C:\Users\Ричи\RiderProjects\CipherSolution\ApplicationL\Program.cs:line 39
+

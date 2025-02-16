@@ -14,7 +14,7 @@ public sealed class ProcessLogger
             Directory.CreateDirectory(logDirectory);
         }
 
-        logFilePath = Path.Combine(logDirectory, "log.txt");
+        logFilePath = Path.Combine(logDirectory, "ProcessLog.log");
         
     }
     

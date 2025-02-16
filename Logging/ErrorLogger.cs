@@ -15,7 +15,7 @@
                 Directory.CreateDirectory(logDirectory);
             }
 
-            _logFilePath = Path.Combine(logDirectory, "error_log.txt");
+            _logFilePath = Path.Combine(logDirectory, "ErrorLog.log");
         }
 
         public static ErrorLogger Instance => _instance.Value;
