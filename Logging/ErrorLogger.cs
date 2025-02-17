@@ -1,6 +1,6 @@
 ﻿namespace Logging
 {
-    public sealed class ErrorLogger
+    public sealed class ErrorLogger: ILogger
     {
         private static readonly Lazy<ErrorLogger> _instance = new Lazy<ErrorLogger>(() => new ErrorLogger());
         private readonly string _logFilePath;
@@ -18,9 +18,9 @@
             _logFilePath = Path.Combine(logDirectory, "ErrorLog.log");
         }
 
-        public static ErrorLogger Instance => _instance.Value;
+        public static ILogger Instance => _instance.Value;
 
-        public void LogError(string message, Exception exception)
+        public void LogD(string message, Exception exception)
         {
             var timestamp = DateTime.Now;
             string logMessage = $"[ERROR] {timestamp:yyyy-MM-dd HH:mm:ss.fff} - Message: {message} - Exception: {exception.GetType()} - {exception.Message}\nStackTrace: {exception.StackTrace}\n";

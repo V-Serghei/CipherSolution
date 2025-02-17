@@ -52,3 +52,13 @@
 [LOG] 2025-02-17 14:49:39.627: Message: Text encrypted - Result: WEDWEDW
 [LOG] 2025-02-17 14:49:41.800: Message: Text encrypted - Result: DWEDWED
 [LOG] 2025-02-17 14:50:15.155: Message: Exit - Result: Succese
+[LOG] 2025-02-17 20:39:17.613: Message: Key changed - Result: opo
+[LOG] 2025-02-17 20:39:20.080: Message: Text encrypted - Result: opo
+[LOG] 2025-02-17 20:39:25.407: Message: Text decrypted - Result: bdb
+[LOG] 2025-02-17 20:39:28.107: Message: Cipher changed - Result: Succese
+[LOG] 2025-02-17 20:40:37.456: Message: Text encrypted - Result: pop
+[LOG] 2025-02-17 20:40:40.125: Message: Text encrypted - Result: opo
+[LOG] 2025-02-17 20:40:43.213: Message: Text decrypted - Result: ccc
+[LOG] 2025-02-17 20:40:49.093: Message: Text decrypted - Result: dsadsas
+[LOG] 2025-02-17 20:40:52.692: Message: Text encrypted - Result: ooo
+[LOG] 2025-02-17 20:40:56.960: Message: Text decrypted - Result: cbc

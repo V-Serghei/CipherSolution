@@ -11,7 +11,7 @@ namespace ApplicationL;
 public class FactoryUse()
 {
     private static readonly ProcessLogger logger = ProcessLogger.Instance;
-    private static readonly ErrorLogger errorLogger = ErrorLogger.Instance;
+    private static readonly ILogger errorLogger = ErrorLogger.Instance;
     private static string _key = "";
     private ICipher _cipher  = null!;
     EncryptionSessionManager _sessionManager = null!;
@@ -32,7 +32,7 @@ public class FactoryUse()
             string? choice = Console.ReadLine();
             if (choice == "0")
             {
-                logger.Log("Exit");
+                logger.LogD("Exit");
                 return;
             }
 
@@ -44,7 +44,7 @@ public class FactoryUse()
                 }
 
                 CipherCreator creator = CipherFactory.GetCipherCreator(choice);
-                logger.Log("Cipher created", choice);
+                logger.LogD("Cipher created", choice);
                 Console.WriteLine("Enter the key:");
                 _key = Console.ReadLine();
                 if (string.IsNullOrEmpty(_key))
@@ -52,7 +52,7 @@ public class FactoryUse()
                     throw new InvalidKeyException("Invalid key");
                 }
                 _sessionManager = new EncryptionSessionManager(_key);
-                logger.Log("Cipher created", _key);
+                logger.LogD("Cipher created", _key);
                 _cipher = creator.CreateCipher(_key);
                 break;
 
@@ -61,21 +61,21 @@ public class FactoryUse()
             {
                 Console.WriteLine("!!!!Wrong choice!!!!");
                 Console.WriteLine("If you want to exit, enter 0.");
-                errorLogger.LogError(exception.Message, exception);
+                errorLogger.LogD(exception.Message, exception);
             }
             catch (InvalidKeyException exception)
             {
                 Console.WriteLine("!!!!Wrong key!!!!");
                 Console.WriteLine("If you want to exit, enter 0.");
                 Console.WriteLine(exception);
-                errorLogger.LogError(exception.Message, exception);
+                errorLogger.LogD(exception.Message, exception);
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An unexpected error occurred:");
                 Console.WriteLine(ex);
-                errorLogger.LogError(ex.Message, ex);
+                errorLogger.LogD(ex.Message, ex);
             }
 
 
@@ -96,7 +96,7 @@ public class FactoryUse()
             string? text = null;
             if (input == "0")
             {
-                logger.Log("Exit");
+                logger.LogD("Exit");
                 break;
             }
 
@@ -121,10 +121,10 @@ public class FactoryUse()
                         if (string.IsNullOrEmpty(_key))
                             throw new InvalidKeyException("Invalid key");
                         _cipher.SetKey(_key);
-                        logger.Log("Key changed", _key);
+                        logger.LogD("Key changed", _key);
                         break;
                     case "00":
-                        logger.Log("Cipher changed");
+                        logger.LogD("Cipher changed");
                         goto choiceCipher;
                     default:
                         Console.WriteLine("!!!!!!!Invalid command!!!!!!!!!");
@@ -147,7 +147,7 @@ public class FactoryUse()
                             var encrypted = service.EncryptText(text);
                             Console.WriteLine($"Encrypted text: {encrypted}");
                             _sessionManager.LogOperation(true, text, encrypted, _key);
-                            logger.Log("Text encrypted", text);
+                            logger.LogD("Text encrypted", text);
                             break;
                         }
                         case "2":
@@ -155,7 +155,7 @@ public class FactoryUse()
                             var decrypted = service.DecryptText(text);
                             Console.WriteLine($"Decrypted text: {decrypted}");
                             _sessionManager.LogOperation(false, text, decrypted, _key);
-                            logger.Log("Text decrypted", text);
+                            logger.LogD("Text decrypted", text);
                             break;
                         }
                     }
@@ -167,7 +167,7 @@ public class FactoryUse()
                 Console.WriteLine("!!!!Wrong text!!!!");
                 Console.WriteLine("If you want to exit, enter 0.");
                 Console.WriteLine(exception);
-                errorLogger.LogError(exception.Message, exception);
+                errorLogger.LogD(exception.Message, exception);
 
             }
             catch (InvalidKeyException exception)
@@ -175,14 +175,14 @@ public class FactoryUse()
                 Console.WriteLine("!!!!Wrong key!!!!");
                 Console.WriteLine("If you want to exit, enter 0.");
                 Console.WriteLine(exception);
-                errorLogger.LogError(exception.Message, exception);
+                errorLogger.LogD(exception.Message, exception);
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An unexpected error occurred:");
                 Console.WriteLine(ex);
-                errorLogger.LogError(ex.Message, ex);
+                errorLogger.LogD(ex.Message, ex);
 
             }
         }

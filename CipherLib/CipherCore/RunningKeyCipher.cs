@@ -1,4 +1,5 @@
-﻿using CipherLib.ConstVal;
+﻿using CipherLib.AbstractFactory;
+using CipherLib.ConstVal;
 using CipherLib.Entities;
 
 namespace CipherLib.CipherCore
@@ -16,6 +17,9 @@ namespace CipherLib.CipherCore
             return containsRussian ? Alphabet.Default.RusAlphabet : Alphabet.Default.EngAlphabet;
         }
 
+        public RunningKeyCipher(ICipherConfiguration configuration)
+            : this(configuration.Key, configuration.Options) { }
+        
         public RunningKeyCipher(string runningKey,  CipherOptions? options = null)
         {
             _runningKey = runningKey;

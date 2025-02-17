@@ -37,7 +37,7 @@ public sealed class ProcessLogger
         }
     }
 
-    public void Log(string message, string result = "Succese")
+    public void LogD(string message, string result = "Succese")
     {
         var timestamp = DateTime.Now;
         string logMessage = $"[LOG] {timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff")}: Message: {message} - Result: {result}";

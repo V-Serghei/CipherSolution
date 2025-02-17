@@ -10,7 +10,7 @@ public class BuilderModeUse
 {
      private ICipher _cipher;
      public static ProcessLogger logger = ProcessLogger.Instance;
-     public static ErrorLogger errorLogger = ErrorLogger.Instance;
+     public static ILogger errorLogger = ErrorLogger.Instance;
      public static string key = "";
     public void Run()
     {
@@ -32,9 +32,10 @@ public class BuilderModeUse
             Console.WriteLine("3. Autokey");
             Console.WriteLine("4. Running key");
             
+            
+            string? algChoice = Console.ReadLine();
             Console.WriteLine("enter the key:");
             key = Console.ReadLine()!;
-            string? algChoice = Console.ReadLine();
             switch (algChoice)
             {
                 case "1":
@@ -125,7 +126,7 @@ public class BuilderModeUse
             string? text = null;
             if (input == "0")
             {
-                logger.Log("Exit");
+                logger.LogD("Exit");
                 break;
             }
 
@@ -150,10 +151,10 @@ public class BuilderModeUse
                         if (string.IsNullOrEmpty(key))
                             throw new InvalidKeyException("Invalid key");
                         _cipher.SetKey(key);
-                        logger.Log("Key changed", key);
+                        logger.LogD("Key changed", key);
                         break;
                     case "00":
-                        logger.Log("Cipher changed");
+                        logger.LogD("Cipher changed");
                         goto choiceCipher;
                     default:
                         Console.WriteLine("!!!!!!!Invalid command!!!!!!!!!");
@@ -175,14 +176,14 @@ public class BuilderModeUse
                         {
                             var encrypted = _cipher.Encrypt(text);
                             Console.WriteLine($"Encrypted text: {encrypted}");
-                            logger.Log("Text encrypted", text);
+                            logger.LogD("Text encrypted", text);
                             break;
                         }
                         case "2":
                         {
                             var decrypted = _cipher.Decrypt(text);
                             Console.WriteLine($"Decrypted text: {decrypted}");
-                            logger.Log("Text decrypted", text);
+                            logger.LogD("Text decrypted", text);
                             break;
                         }
                     }
@@ -194,7 +195,7 @@ public class BuilderModeUse
                 Console.WriteLine("!!!!Wrong text!!!!");
                 Console.WriteLine("If you want to exit, enter 0.");
                 Console.WriteLine(exception);
-                errorLogger.LogError(exception.Message, exception);
+                errorLogger.LogD(exception.Message, exception);
 
             }
             catch (InvalidKeyException exception)
@@ -202,14 +203,14 @@ public class BuilderModeUse
                 Console.WriteLine("!!!!Wrong key!!!!");
                 Console.WriteLine("If you want to exit, enter 0.");
                 Console.WriteLine(exception);
-                errorLogger.LogError(exception.Message, exception);
+                errorLogger.LogD(exception.Message, exception);
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An unexpected error occurred:");
                 Console.WriteLine(ex);
-                errorLogger.LogError(ex.Message, ex);
+                errorLogger.LogD(ex.Message, ex);
 
             }
         }
