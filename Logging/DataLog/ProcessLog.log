@@ -38,3 +38,17 @@
 [LOG] 2025-02-17 00:43:57.012: Message: Text encrypted - Result: POP
 [LOG] 2025-02-17 00:44:01.187: Message: Text decrypted - Result: ece
 [LOG] 2025-02-17 00:44:05.416: Message: Cipher changed - Result: Succese
+[LOG] 2025-02-17 14:48:42.869: Message: Cipher created - Result: 1
+[LOG] 2025-02-17 14:48:46.445: Message: Cipher created - Result: lpl
+[LOG] 2025-02-17 14:48:50.289: Message: Text encrypted - Result: sdf
+[LOG] 2025-02-17 14:48:59.603: Message: Text decrypted - Result: cRP
+[LOG] 2025-02-17 14:49:05.189: Message: Text encrypted - Result: EPEPE
+[LOG] 2025-02-17 14:49:08.833: Message: Text encrypted - Result: DLSDLF
+[LOG] 2025-02-17 14:49:11.874: Message: Text encrypted - Result: SDFDFFW
+[LOG] 2025-02-17 14:49:15.449: Message: Text decrypted - Result: OFFOFOF
+[LOG] 2025-02-17 14:49:21.499: Message: Key changed - Result: FFF
+[LOG] 2025-02-17 14:49:24.422: Message: Text encrypted - Result: SDF
+[LOG] 2025-02-17 14:49:33.469: Message: Text decrypted - Result: XIK
+[LOG] 2025-02-17 14:49:39.627: Message: Text encrypted - Result: WEDWEDW
+[LOG] 2025-02-17 14:49:41.800: Message: Text encrypted - Result: DWEDWED
+[LOG] 2025-02-17 14:50:15.155: Message: Exit - Result: Succese

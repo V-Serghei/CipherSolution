@@ -1,6 +1,8 @@
-﻿using ApplicationL.CustomExceptions;
+﻿using System.Text.Json;
+using ApplicationL.CustomExceptions;
 using CipherLib;
 using CipherLib.Factory;
+using CipherLib.Prototype;
 using CipherLib.Service;
 using Logging;
 
@@ -12,7 +14,7 @@ public class FactoryUse()
     private static readonly ErrorLogger errorLogger = ErrorLogger.Instance;
     private static string _key = "";
     private ICipher _cipher  = null!;
-
+    EncryptionSessionManager _sessionManager = null!;
 
     public void Run()
     {
@@ -49,7 +51,7 @@ public class FactoryUse()
                 {
                     throw new InvalidKeyException("Invalid key");
                 }
-
+                _sessionManager = new EncryptionSessionManager(_key);
                 logger.Log("Cipher created", _key);
                 _cipher = creator.CreateCipher(_key);
                 break;
@@ -144,6 +146,7 @@ public class FactoryUse()
                         {
                             var encrypted = service.EncryptText(text);
                             Console.WriteLine($"Encrypted text: {encrypted}");
+                            _sessionManager.LogOperation(true, text, encrypted, _key);
                             logger.Log("Text encrypted", text);
                             break;
                         }
@@ -151,6 +154,7 @@ public class FactoryUse()
                         {
                             var decrypted = service.DecryptText(text);
                             Console.WriteLine($"Decrypted text: {decrypted}");
+                            _sessionManager.LogOperation(false, text, decrypted, _key);
                             logger.Log("Text decrypted", text);
                             break;
                         }
@@ -182,5 +186,25 @@ public class FactoryUse()
 
             }
         }
+        var allSessions = _sessionManager.GetAllSessions();
+        string directoryPath = @"C:\Users\Ричи\RiderProjects\CipherSolution\CipherLib\Prototype\data";
+
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
+        string filePath = Path.Combine(directoryPath, "allSessions.json");
+
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+
+        string json = JsonSerializer.Serialize(allSessions, options);
+
+        File.WriteAllText(filePath, json);
+
+        Console.WriteLine($"Данные успешно сохранены в файл: {filePath}");
     }
 }
