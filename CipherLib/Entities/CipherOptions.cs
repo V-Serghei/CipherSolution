@@ -9,6 +9,9 @@
         public bool ErrorLogging { get; set; }
         public bool ProcessLogging { get; set; }
 
+        /// <summary>
+        /// Represents the options for configuring a cipher algorithm.
+        /// </summary>
         public CipherOptions(
             bool useExplicitAlphabet = false,
             string alphabetVariant = "eng",
