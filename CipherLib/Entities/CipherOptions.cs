@@ -1,18 +1,31 @@
 ﻿namespace CipherLib.Entities
 {
-    public class CipherOptions(
-        bool useExplicitAlphabet = false,
-        string alphabetVariant = "eng",
-        bool allowSymbols = false,
-        bool allowNumbers = false,
-        bool errorLogging = false,
-        bool processLogging = false)
+    public class CipherOptions
     {
-        public bool UseExplicitAlphabet { get; set; } = useExplicitAlphabet;
-        public string AlphabetVariant { get; set; } = alphabetVariant;
-        public bool AllowSymbols { get; set; } = allowSymbols;
-        public bool AllowNumbers { get; set; } = allowNumbers;
-        public bool ErrorLogging { get; set; } = errorLogging;
-        public bool ProcessLogging { get; set; } = processLogging;
+        public bool UseExplicitAlphabet { get; set; }
+        public string AlphabetVariant { get; set; }
+        public bool AllowSymbols { get; set; }
+        public bool AllowNumbers { get; set; }
+        public bool ErrorLogging { get; set; }
+        public bool ProcessLogging { get; set; }
+
+        /// <summary>
+        /// Represents the options for configuring a cipher algorithm.
+        /// </summary>
+        public CipherOptions(
+            bool useExplicitAlphabet = false,
+            string alphabetVariant = "eng",
+            bool allowSymbols = false,
+            bool allowNumbers = false,
+            bool errorLogging = false,
+            bool processLogging = false)
+        {
+            UseExplicitAlphabet = useExplicitAlphabet;
+            AlphabetVariant = alphabetVariant;
+            AllowSymbols = allowSymbols;
+            AllowNumbers = allowNumbers;
+            ErrorLogging = errorLogging;
+            ProcessLogging = processLogging;
+        }
     }
 }

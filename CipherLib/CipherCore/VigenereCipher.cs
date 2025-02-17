@@ -1,4 +1,5 @@
-﻿using CipherLib.ConstVal;
+﻿using CipherLib.AbstractFactory;
+using CipherLib.ConstVal;
 using CipherLib.Entities;
 
 namespace CipherLib.CipherCore
@@ -15,6 +16,9 @@ namespace CipherLib.CipherCore
             return containsRussian ? Alphabet.Default.RusAlphabet : Alphabet.Default.EngAlphabet;
         }
 
+        public VigenereCipher(ICipherConfiguration configuration)
+            : this(configuration.Key, configuration.Options) { }
+        
         public VigenereCipher(string key, CipherOptions? options = null)
         {
             _key = key;

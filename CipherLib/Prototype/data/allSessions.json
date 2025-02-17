@@ -1,0 +1,72 @@
+[
+  {
+    "key": "lpl",
+    "operations": [
+      {
+        "Timestamp": "2025-02-17T14:48:50.2885824+02:00",
+        "IsEncrypted": true,
+        "InputText": "sdf",
+        "OutputText": "cRP"
+      },
+      {
+        "Timestamp": "2025-02-17T14:48:59.6031718+02:00",
+        "IsEncrypted": false,
+        "InputText": "cRP",
+        "OutputText": "sdf"
+      },
+      {
+        "Timestamp": "2025-02-17T14:49:05.1890931+02:00",
+        "IsEncrypted": true,
+        "InputText": "EPEPE",
+        "OutputText": "pDp t"
+      },
+      {
+        "Timestamp": "2025-02-17T14:49:08.833019+02:00",
+        "IsEncrypted": true,
+        "InputText": "DLSDLF",
+        "OutputText": "o Co q"
+      },
+      {
+        "Timestamp": "2025-02-17T14:49:11.8744434+02:00",
+        "IsEncrypted": true,
+        "InputText": "SDFDFFW",
+        "OutputText": "CsqouqG"
+      },
+      {
+        "Timestamp": "2025-02-17T14:49:15.4492977+02:00",
+        "IsEncrypted": false,
+        "InputText": "OFFOFOF",
+        "OutputText": "eRVeReV"
+      }
+    ]
+  },
+  {
+    "key": "FFF",
+    "operations": [
+      {
+        "Timestamp": "2025-02-17T14:49:24.4227717+02:00",
+        "IsEncrypted": true,
+        "InputText": "SDF",
+        "OutputText": "XIK"
+      },
+      {
+        "Timestamp": "2025-02-17T14:49:33.4694319+02:00",
+        "IsEncrypted": false,
+        "InputText": "XIK",
+        "OutputText": "SDF"
+      },
+      {
+        "Timestamp": "2025-02-17T14:49:39.6271126+02:00",
+        "IsEncrypted": true,
+        "InputText": "WEDWEDW",
+        "OutputText": "bJIbJIb"
+      },
+      {
+        "Timestamp": "2025-02-17T14:49:41.8002656+02:00",
+        "IsEncrypted": true,
+        "InputText": "DWEDWED",
+        "OutputText": "IbJIbJI"
+      }
+    ]
+  }
+]

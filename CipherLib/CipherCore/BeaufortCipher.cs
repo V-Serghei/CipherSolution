@@ -1,4 +1,5 @@
-﻿using CipherLib.ConstVal;
+﻿using CipherLib.AbstractFactory;
+using CipherLib.ConstVal;
 using CipherLib.Entities;
 
 namespace CipherLib.CipherCore
@@ -16,6 +17,9 @@ namespace CipherLib.CipherCore
             return containsRussian ? Alphabet.Default.RusAlphabet : Alphabet.Default.EngAlphabet;
         }
 
+        public BeaufortCipher(ICipherConfiguration configuration)
+            : this(configuration.Key, configuration.Options) { }
+        
         public BeaufortCipher(string key, CipherOptions? options = null)
         {
             _key = key;
