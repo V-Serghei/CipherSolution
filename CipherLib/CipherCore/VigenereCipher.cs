@@ -1,6 +1,7 @@
 ﻿using CipherLib.AbstractFactory;
 using CipherLib.ConstVal;
 using CipherLib.Entities;
+using CipherLib.Infrastructure;
 
 namespace CipherLib.CipherCore
 {
@@ -10,6 +11,8 @@ namespace CipherLib.CipherCore
         private char[] _alphabet;
         private bool _enableErrorLogging = false;
         private bool _enableProcessLogging = false;
+        
+        WayManager manager = new WayManager();
         private char[] DetermineAlphabet(string text)
         {
             bool containsRussian = text.Any(c => (c >= 'А' && c <= 'Я') || (c >= 'а' && c <= 'я'));
@@ -133,36 +136,106 @@ namespace CipherLib.CipherCore
             return Process(text, _key, false);
         }
 
+        // private string Process(string text, string key, bool encrypt)
+        // {
+        //     string result = "";
+        //     int alphabetLength = _alphabet.Length;
+        //     
+        //     for (int i = 0, j = 0; i < text.Length; i++)
+        //     {
+        //         char textChar = text[i];
+        //         int textIndex = Array.IndexOf(_alphabet, textChar);
+        //         if (textIndex == -1)
+        //         {
+        //             result += textChar;
+        //             continue;
+        //         }
+        //         
+        //         char keyChar = key[j % key.Length];
+        //         int keyIndex = Array.IndexOf(_alphabet, keyChar);
+        //         if (keyIndex == -1)
+        //             keyIndex = 0;
+        //
+        //         int newIndex = encrypt
+        //             ? (textIndex + keyIndex) % alphabetLength
+        //             : (textIndex - keyIndex + alphabetLength) % alphabetLength;
+        //
+        //         result += _alphabet[newIndex];
+        //         j++;
+        //     }
+        //
+        //     return result;
+        // }
+        //
         private string Process(string text, string key, bool encrypt)
         {
+            List<int> way = new List<int>();
+            way.Add(1);
             string result = "";
             int alphabetLength = _alphabet.Length;
-            
+            way.Add(2);
             for (int i = 0, j = 0; i < text.Length; i++)
             {
+                
+                way.Add(3);
                 char textChar = text[i];
                 int textIndex = Array.IndexOf(_alphabet, textChar);
-                if (textIndex == -1)
+                way.Add(4);
+                if (textIndex != -1)
                 {
-                    result += textChar;
-                    continue;
+                    way.Add(5);
+                    char keyChar = key[j % key.Length];
+                    int keyIndex = Array.IndexOf(_alphabet, keyChar);
+                    way.Add(6);
+                    if (keyIndex == -1)
+                    {
+                        way.Add(7);
+                        keyIndex = 0;
+                    }
+                    way.Add(8);
+                    
+                    way.Add(9);
+                    int newIndex = encrypt
+                        ? (textIndex + keyIndex) % alphabetLength
+                        : (textIndex - keyIndex + alphabetLength) % alphabetLength;
+                    if(encrypt)way.Add(10);
+                    else way.Add(11);
+                    way.Add(12);
+                    
+                    result += _alphabet[newIndex];
+                    j++;
                 }
-                
-                char keyChar = key[j % key.Length];
-                int keyIndex = Array.IndexOf(_alphabet, keyChar);
-                if (keyIndex == -1)
-                    keyIndex = 0;
-
-                int newIndex = encrypt
-                    ? (textIndex + keyIndex) % alphabetLength
-                    : (textIndex - keyIndex + alphabetLength) % alphabetLength;
-
-                result += _alphabet[newIndex];
-                j++;
+                else
+                {
+                    way.Add(13);
+                    result += textChar;
+                }
+                way.Add(14);
+                way.Add(15);
+                way.Add(2);
             }
-
+            way.Add(16);
+            
+            outputWay(way);
             return result;
         }
+
+        private void outputWay(List<int> way)
+        {
+            manager.OutputWay(way);
+            foreach (var CWay in way)
+            {
+                Console.Write(CWay);
+                if (!CWay.Equals(way[^1])) 
+                {
+                    Console.Write("->");
+                }
+            }
+            Console.WriteLine();
+            
+            
+        }
+
 
         public void SetKey(string key)
         {

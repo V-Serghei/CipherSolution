@@ -18,7 +18,15 @@ public class FactoryUse()
 
     public void Run()
     {
-
+        Console.WriteLine("In this mode, the alphabet will not be changed after the key is entered.");
+        Console.WriteLine("The language will be chosen when entering the key from the two available options.");
+        Console.WriteLine("The key and input text must be of the same alphabet.");
+        Console.WriteLine("If this rule is not followed, the encryption process will not work correctly.");
+        Console.WriteLine();
+        Console.WriteLine("Currently available alphabets:\n" +
+                          "Rus 1: АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя \n" +
+                          "Eng 2: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz \n");
+        
         // choiceCipher - is goto label for switch cipher
         choiceCipher:
 
@@ -135,10 +143,10 @@ public class FactoryUse()
                 if (input != "3" && !string.IsNullOrEmpty(input) && input is "1" or "2")
                 {
                     text = Console.ReadLine();
-                    if (string.IsNullOrEmpty(text))
-                    {
-                        throw new InvalidTextException("Invalid text");
-                    }
+                    // if (string.IsNullOrEmpty(text))
+                    // {
+                    //     throw new InvalidTextException("Invalid text");
+                    // }
 
                     switch (input)
                     {

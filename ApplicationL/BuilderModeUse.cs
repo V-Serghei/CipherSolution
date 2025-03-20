@@ -151,7 +151,7 @@ public class BuilderModeUse
                         if (string.IsNullOrEmpty(key))
                             throw new InvalidKeyException("Invalid key");
                         _cipher.SetKey(key);
-                        logger.LogD("Key changed", key);
+                        ProcessLogger.Instance.LogD("Key changed", key);
                         break;
                     case "00":
                         logger.LogD("Cipher changed");
