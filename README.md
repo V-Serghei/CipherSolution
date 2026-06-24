@@ -1,21 +1,29 @@
 # CipherSolution
 
-CipherSolution is an educational .NET application that implements classical polyalphabetic ciphers and demonstrates several software design patterns.
+CipherSolution is an educational and practical .NET application for text encryption. It demonstrates classical polyalphabetic ciphers and software design patterns, while also offering a practical AES-GCM mode for real text/file workflows.
 
 ## Overview
 
-The project supports four cipher algorithms:
+The project supports classical algorithms:
 
 | Cipher | Description |
 | --- | --- |
-| Vigenere | Standard polyalphabetic cipher with a repeating keyword |
-| Beaufort | Variant of Vigenere with reversed encryption and decryption logic |
-| AutoKey | Self-keying cipher where the key is extended with plaintext |
-| Running Key | Cipher that uses a long text as the key |
+| Vigenere | Polyalphabetic cipher with a repeating keyword |
+| Beaufort | Reciprocal Vigenere-style cipher |
+| AutoKey | Cipher that extends the key with plaintext |
+| Running Key | Cipher that requires a key at least as long as the text |
 
-Supported alphabets include English, Russian, and extended variants with digits and symbols depending on configuration.
+The desktop app also includes:
 
-The desktop UI uses the same cipher creation paths as the console application and adds an `auto` alphabet mode for practical input. In `auto` mode it detects English, Russian, numbers, symbols, and mixed English/Russian text before running an operation.
+- Practical mode with automatic alphabet detection
+- AES-GCM text encryption with PBKDF2-SHA256 password-based key derivation
+- English, Russian, number, symbol, and mixed alphabet variants
+- Text file import and result export
+- Operation history with round-trip verification
+- Clipboard actions: copy, paste, swap, repeat
+- Built-in cipher and pattern reference tab
+
+Classical ciphers are useful for learning and experimentation. AES-GCM is the practical mode for authenticated text encryption.
 
 ## Tech Stack
 
@@ -25,6 +33,7 @@ The desktop UI uses the same cipher creation paths as the console application an
 - Console UI
 - NUnit 4
 - JSON session history storage
+- AES-GCM and PBKDF2 from `System.Security.Cryptography`
 
 ## Quick Start
 
@@ -62,7 +71,7 @@ No environment variables or secrets are required.
 CipherSolution/
 |-- ApplicationL/        Console UI entry point
 |-- CipherDesktop/       WPF desktop UI entry point
-|-- CipherLib/           Cipher algorithms and design pattern implementations
+|-- CipherLib/           Cipher algorithms, workflows, and pattern implementations
 |-- Logging/             Singleton loggers
 |-- CipherTests/         NUnit test suite
 |-- start.bat            Setup and launch script
@@ -79,6 +88,9 @@ CipherSolution/
 | Factory Method | `CipherLib/Factory/` |
 | Singleton | `Logging/` |
 | Prototype | `CipherLib/Prototype/` |
+| Strategy | `CipherLib/Practical/` |
+| Command | `CipherLib/Practical/CipherOperationCommand.cs` |
+| Facade | `CipherLib/Practical/PracticalCipherFacade.cs` |
 
 ## Running Tests Manually
 

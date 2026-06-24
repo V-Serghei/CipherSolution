@@ -46,9 +46,12 @@ public sealed class CipherWorkflow
         _sessionManager = new EncryptionSessionManager(options.Key);
     }
 
+    public string LastAlphabetVariant { get; private set; } = "";
+
     public string Encrypt(string text)
     {
         string alphabetVariant = ValidateInput(text, isEncryption: true);
+        LastAlphabetVariant = alphabetVariant;
         CipherService service = new(CreateCipher(_options, alphabetVariant));
         string output = service.EncryptText(text);
         _sessionManager.LogOperation(true, text, output, _options.Key);
@@ -59,6 +62,7 @@ public sealed class CipherWorkflow
     public string Decrypt(string text)
     {
         string alphabetVariant = ValidateInput(text, isEncryption: false);
+        LastAlphabetVariant = alphabetVariant;
         CipherService service = new(CreateCipher(_options, alphabetVariant));
         string output = service.DecryptText(text);
         _sessionManager.LogOperation(false, text, output, _options.Key);
