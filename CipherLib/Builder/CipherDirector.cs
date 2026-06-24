@@ -1,4 +1,3 @@
-﻿using System;
 using CipherLib.ConstVal;
 
 namespace CipherLib.Builder
@@ -16,7 +15,7 @@ namespace CipherLib.Builder
                 .EnableProcessLogging(true);
         }
 
-        public void BuildDefaultBeaufort(ICipherBuilder builder,string key = "Default")
+        public void BuildDefaultBeaufort(ICipherBuilder builder, string key = "Default")
         {
             builder.SetAlgorithmType(CipherType.Beaufort)
                 .SetKey(key)
@@ -27,9 +26,9 @@ namespace CipherLib.Builder
                 .EnableProcessLogging(true);
         }
 
-        public void BuildDefaultRunningKey(ICipherBuilder builder,string key = "Default")
+        public void BuildDefaultAutoKey(ICipherBuilder builder, string key = "Default")
         {
-            builder.SetAlgorithmType(CipherType.RunningKey).SetKey("DefaultRunningKey")
+            builder.SetAlgorithmType(CipherType.AutoKey)
                 .SetKey(key)
                 .SetLanguage("eng")
                 .AllowSymbols(false)
@@ -38,9 +37,9 @@ namespace CipherLib.Builder
                 .EnableProcessLogging(true);
         }
 
-        public void BuildDefaultAutoKey(ICipherBuilder builder,string key = "Default")
+        public void BuildDefaultRunningKey(ICipherBuilder builder, string key = "Default")
         {
-            builder.SetAlgorithmType(CipherType.RunningKey).SetKey("DefaultRunningKey")
+            builder.SetAlgorithmType(CipherType.RunningKey)
                 .SetKey(key)
                 .SetLanguage("eng")
                 .AllowSymbols(false)
@@ -48,6 +47,5 @@ namespace CipherLib.Builder
                 .EnableErrorLogging(true)
                 .EnableProcessLogging(true);
         }
-        
     }
 }
