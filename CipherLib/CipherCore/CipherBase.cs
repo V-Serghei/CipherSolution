@@ -34,7 +34,7 @@ namespace CipherLib.CipherCore
 
         private static char[] DetectAlphabet(string text)
         {
-            bool containsRussian = text.Any(c => (c >= 'А' && c <= 'Я') || (c >= 'а' && c <= 'я'));
+            bool containsRussian = text.Any(c => (c >= 'А' && c <= 'я') || c == 'Ё' || c == 'ё');
             return containsRussian ? Alphabet.Default.RusAlphabet : Alphabet.Default.EngAlphabet;
         }
 

@@ -1,63 +1,84 @@
 # CipherSolution
 
-A .NET console application implementing classical polyalphabetic ciphers with a focus on software design patterns.
+CipherSolution is an educational .NET application that implements classical polyalphabetic ciphers and demonstrates several software design patterns.
 
 ## Overview
 
-CipherSolution demonstrates four classical substitution ciphers:
+The project supports four cipher algorithms:
 
 | Cipher | Description |
-|--------|-------------|
-| **Vigenère** | Standard polyalphabetic cipher with a repeating keyword |
-| **Beaufort** | Variant of Vigenère with reversed encryption/decryption |
-| **AutoKey** | Self-keying cipher — key is extended with the plaintext |
-| **Running Key** | Uses a long text (e.g. book passage) as the key |
+| --- | --- |
+| Vigenere | Standard polyalphabetic cipher with a repeating keyword |
+| Beaufort | Variant of Vigenere with reversed encryption and decryption logic |
+| AutoKey | Self-keying cipher where the key is extended with plaintext |
+| Running Key | Cipher that uses a long text as the key |
 
-Supported alphabets: Russian (Cyrillic), English, and an extended set that includes digits and symbols.
+Supported alphabets include English, Russian, and extended variants with digits and symbols depending on configuration.
 
-## Design Patterns
-
-| Pattern | Location |
-|---------|----------|
-| Abstract Factory | `CipherLib/AbstractFactory/` |
-| Builder | `CipherLib/Builder/` |
-| Factory Method | `CipherLib/Factory/` |
-| Singleton | `Logging/` |
-| Prototype | `CipherLib/Prototype/` |
+The desktop UI uses the same cipher creation paths as the console application and validates key/text alphabet compatibility before running an operation.
 
 ## Tech Stack
 
-- **.NET 10** — runtime and SDK
-- **C#** — language
-- **NUnit 4** — unit tests
-- **JSON** — session history storage (`CipherLib/Prototype/data/allSessions.json`)
+- .NET 10
+- C#
+- WPF desktop UI
+- Console UI
+- NUnit 4
+- JSON session history storage
 
 ## Quick Start
+
+Run the desktop application:
 
 ```bat
 start.bat
 ```
 
-This single command restores packages, builds the solution, runs tests, and launches the interactive menu.
+Run the console application:
 
-To stop the application:
+```bat
+start.bat --console
+```
+
+Run tests during startup:
+
+```bat
+start.bat --test
+```
+
+Stop a running application instance:
 
 ```bat
 stop.bat
 ```
 
-## Project Structure
+## Environment Variables
 
-```
+No environment variables or secrets are required.
+
+## Architecture
+
+```text
 CipherSolution/
-├── ApplicationL/        # Interactive console menu (entry point)
-├── CipherLib/           # Cipher algorithms and design pattern implementations
-├── Logging/             # Singleton logger
-├── CipherTests/         # NUnit test suite
-├── start.bat            # Setup and launch script
-├── stop.bat             # Shutdown script
-└── CipherSolution.sln
+|-- ApplicationL/        Console UI entry point
+|-- CipherDesktop/       WPF desktop UI entry point
+|-- CipherLib/           Cipher algorithms and design pattern implementations
+|-- Logging/             Singleton loggers
+|-- CipherTests/         NUnit test suite
+|-- start.bat            Setup and launch script
+|-- stop.bat             Shutdown script
+`-- CipherSolution.sln
 ```
+
+## Design Patterns
+
+| Pattern | Location |
+| --- | --- |
+| Abstract Factory | `CipherLib/AbstractFactory/` |
+| Builder | `CipherLib/Builder/` |
+| Factory Method | `CipherLib/Factory/` |
+| Singleton | `Logging/` |
+| Prototype | `CipherLib/Prototype/` |
 
 ## Running Tests Manually
 

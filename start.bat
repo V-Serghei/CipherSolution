@@ -2,13 +2,20 @@
 setlocal EnableDelayedExpansion
 title CipherSolution - Setup
 
+set "RUN_CONSOLE=0"
+set "RUN_TESTS=0"
+
+for %%a in (%*) do (
+    if /I "%%~a"=="--console" set "RUN_CONSOLE=1"
+    if /I "%%~a"=="--test" set "RUN_TESTS=1"
+)
+
 echo.
 echo  ================================================
-echo   CipherSolution - Setup ^& Launch
+echo   CipherSolution - Setup and Launch
 echo  ================================================
 echo.
 
-:: ─── 1. Check prerequisites ──────────────────────────────────────────────────
 echo [1/4] Checking prerequisites...
 
 dotnet --version >nul 2>&1
@@ -21,28 +28,25 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-for /f "tokens=*" %%v in ('dotnet --version 2^>nul') do set DOTNET_VER=%%v
+for /f "tokens=*" %%v in ('dotnet --version 2^>nul') do set "DOTNET_VER=%%v"
 echo        .NET SDK: %DOTNET_VER%
 
-:: Warn if not .NET 10+ (but do not block — allows previews)
 echo %DOTNET_VER% | findstr /b "10\." >nul
 if %errorlevel% neq 0 (
     echo  [WARN] Expected .NET 10.x. Current version: %DOTNET_VER%
-    echo         Project targets net10.0 — build may fail on older SDKs.
+    echo         Project targets net10.0 and net10.0-windows.
 )
 
-:: ─── 2. Restore NuGet packages ───────────────────────────────────────────────
 echo.
 echo [2/4] Restoring NuGet packages...
 dotnet restore CipherSolution.sln --verbosity quiet
 if %errorlevel% neq 0 (
-    echo  [ERROR] NuGet restore failed. Check your internet connection.
+    echo  [ERROR] NuGet restore failed.
     pause
     exit /b 1
 )
 echo        Packages restored.
 
-:: ─── 3. Build solution ───────────────────────────────────────────────────────
 echo.
 echo [3/4] Building solution (Release)...
 dotnet build CipherSolution.sln --configuration Release --no-restore --verbosity quiet
@@ -53,27 +57,32 @@ if %errorlevel% neq 0 (
 )
 echo        Build succeeded.
 
-:: ─── 4. Run tests ────────────────────────────────────────────────────────────
 echo.
-echo [4/4] Running tests...
-dotnet test CipherSolution.sln --configuration Release --no-build --verbosity quiet
-if %errorlevel% neq 0 (
-    echo  [WARN] One or more tests failed — check output above.
-    echo         Application will still launch.
+echo [4/4] Test step...
+if "%RUN_TESTS%"=="1" (
+    dotnet test CipherSolution.sln --configuration Release --no-build --verbosity quiet
+    if !errorlevel! neq 0 (
+        echo  [WARN] One or more tests failed. Application will still launch.
+    ) else (
+        echo        All tests passed.
+    )
 ) else (
-    echo        All tests passed.
+    echo        Skipped. Use --test to run tests during startup.
 )
 
-:: ─── Launch ──────────────────────────────────────────────────────────────────
 echo.
 echo  ================================================
 echo   Setup complete. Launching application...
-echo   Close this window or press Ctrl+C to stop.
 echo  ================================================
 echo.
 
-title CipherSolution
-dotnet run --project ApplicationL\ApplicationL.csproj --configuration Release --no-build
+if "%RUN_CONSOLE%"=="1" (
+    title CipherSolution Console
+    dotnet run --project ApplicationL\ApplicationL.csproj --configuration Release --no-build
+) else (
+    title CipherSolution Desktop Host
+    dotnet run --project CipherDesktop\CipherDesktop.csproj --configuration Release --no-build
+)
 
 echo.
 echo  Application exited.
