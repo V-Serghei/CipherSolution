@@ -87,7 +87,7 @@ namespace ApplicationL
                                 throw new Exception("Invalid text");
                             string encrypted = service.EncryptText(plainText);
                             Console.WriteLine($"Encrypted: {encrypted}");
-                            _sessionManager.LogOperation(true, plainText, encrypted, _cipher.ToString());
+                            _sessionManager.LogOperation(true, plainText, encrypted, _cipher.ToString() ?? "");
                             _logger.LogD("Text encrypted: " + plainText, exception: new Exception("Text encrypted: " + plainText));
                             break;
                         case "2":
@@ -97,7 +97,7 @@ namespace ApplicationL
                                 throw new Exception("Invalid text");
                             string decrypted = service.DecryptText(cipherText);
                             Console.WriteLine($"Decrypted: {decrypted}");
-                            _sessionManager.LogOperation(false, cipherText, decrypted, _cipher.ToString());
+                            _sessionManager.LogOperation(false, cipherText, decrypted, _cipher.ToString() ?? "");
                             _logger.LogD("Text decrypted: " + cipherText, exception: new Exception("Text decrypted: " + cipherText));
                             break;
                         case "3":

@@ -19,8 +19,6 @@ namespace ApplicationL
             Console.WriteLine("3. Abstract factory mode");
             Console.WriteLine("0. Exit");
             string? mode = Console.ReadLine();
-            ICipher cipher = null!;
-
             if (mode == "2")
             {
                 BuilderModeUse builderModeUse = new BuilderModeUse();
