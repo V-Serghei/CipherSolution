@@ -1,20 +1,14 @@
-﻿namespace Logging
+namespace Logging
 {
-    public sealed class ErrorLogger: ILogger
+    public sealed class ErrorLogger : ILogger
     {
-        private static readonly Lazy<ErrorLogger> _instance = new Lazy<ErrorLogger>(() => new ErrorLogger());
+        private static readonly Lazy<ErrorLogger> _instance = new(() => new ErrorLogger());
         private readonly string _logFilePath;
 
         private ErrorLogger()
         {
-            var currentDirectory = "C:\\Users\\Ричи\\RiderProjects\\CipherSolution\\Logging";
-            var logDirectory = Path.Combine(currentDirectory, "ErrorLog");
-
-            if (!Directory.Exists(logDirectory))
-            {
-                Directory.CreateDirectory(logDirectory);
-            }
-
+            string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "error");
+            Directory.CreateDirectory(logDirectory);
             _logFilePath = Path.Combine(logDirectory, "ErrorLog.log");
         }
 
@@ -22,9 +16,9 @@
 
         public void LogD(string message, Exception exception)
         {
-            var timestamp = DateTime.Now;
-            string logMessage = $"[ERROR] {timestamp:yyyy-MM-dd HH:mm:ss.fff} - Message: {message} - Exception: {exception.GetType()} - {exception.Message}\nStackTrace: {exception.StackTrace}\n";
-            
+            string logMessage =
+                $"[ERROR] {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} - {message} " +
+                $"- {exception.GetType()}: {exception.Message}\nStackTrace: {exception.StackTrace}";
             File.AppendAllText(_logFilePath, logMessage + Environment.NewLine);
         }
     }

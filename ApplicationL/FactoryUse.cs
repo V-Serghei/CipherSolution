@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using ApplicationL.CustomExceptions;
 using CipherLib;
 using CipherLib.Factory;
@@ -8,211 +8,189 @@ using Logging;
 
 namespace ApplicationL;
 
-public class FactoryUse()
+public class FactoryUse
 {
-    private static readonly ProcessLogger logger = ProcessLogger.Instance;
-    private static readonly ILogger errorLogger = ErrorLogger.Instance;
-    private static string _key = "";
-    private ICipher _cipher  = null!;
-    EncryptionSessionManager _sessionManager = null!;
+    private static readonly ProcessLogger _logger = ProcessLogger.Instance;
+    private static readonly ILogger _errorLogger = ErrorLogger.Instance;
 
     public void Run()
     {
-        Console.WriteLine("In this mode, the alphabet will not be changed after the key is entered.");
-        Console.WriteLine("The language will be chosen when entering the key from the two available options.");
-        Console.WriteLine("The key and input text must be of the same alphabet.");
-        Console.WriteLine("If this rule is not followed, the encryption process will not work correctly.");
+        Console.WriteLine("In this mode, the alphabet is determined automatically from the input text.");
+        Console.WriteLine("The key and text must use the same alphabet for correct results.");
         Console.WriteLine();
-        Console.WriteLine("Currently available alphabets:\n" +
-                          "Rus 1: АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя \n" +
-                          "Eng 2: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz \n");
-        
-        // choiceCipher - is goto label for switch cipher
-        choiceCipher:
+        Console.WriteLine("Available alphabets:");
+        Console.WriteLine("  Russian: АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя");
+        Console.WriteLine("  English: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+        Console.WriteLine();
 
+        bool restart;
         do
         {
-            Console.WriteLine("Select encryption algorithm:");
-            Console.WriteLine("1. Vigenère cipher");
-            Console.WriteLine("2. Beaufort cipher");
-            Console.WriteLine("3. Autokey cipher");
-            Console.WriteLine("4. Running key cipher");
-            string? choice = Console.ReadLine();
-            if (choice == "0")
-            {
-                logger.LogD("Exit");
-                return;
-            }
+            restart = false;
 
-            try
+            ICipher? cipher = null;
+            EncryptionSessionManager? sessionManager = null;
+            string key = "";
+
+            while (cipher == null)
             {
-                if (string.IsNullOrEmpty(choice))
+                Console.WriteLine("Select encryption algorithm:");
+                Console.WriteLine("1. Vigenère cipher");
+                Console.WriteLine("2. Beaufort cipher");
+                Console.WriteLine("3. Autokey cipher");
+                Console.WriteLine("4. Running key cipher");
+                Console.WriteLine("0. Exit");
+
+                string? choice = Console.ReadLine();
+                if (choice == "0")
                 {
-                    throw new InvalidCipherChoiceException("Invalid cipher choice");
+                    _logger.LogD("Exit");
+                    return;
                 }
 
-                CipherCreator creator = CipherFactory.GetCipherCreator(choice);
-                logger.LogD("Cipher created", choice);
-                Console.WriteLine("Enter the key:");
-                _key = Console.ReadLine();
-                if (string.IsNullOrEmpty(_key))
+                try
                 {
-                    throw new InvalidKeyException("Invalid key");
+                    if (string.IsNullOrEmpty(choice))
+                        throw new InvalidCipherChoiceException("Invalid cipher choice");
+
+                    CipherCreator creator = CipherFactory.GetCipherCreator(choice);
+                    _logger.LogD("Cipher selected", choice);
+
+                    Console.Write("Enter the key: ");
+                    key = Console.ReadLine() ?? "";
+                    if (string.IsNullOrEmpty(key))
+                        throw new InvalidKeyException("Invalid key");
+
+                    cipher = creator.CreateCipher(key);
+                    sessionManager = new EncryptionSessionManager(key);
+                    _logger.LogD("Cipher created", key);
                 }
-                _sessionManager = new EncryptionSessionManager(_key);
-                logger.LogD("Cipher created", _key);
-                _cipher = creator.CreateCipher(_key);
-                break;
-
-            }
-            catch (InvalidCipherChoiceException exception)
-            {
-                Console.WriteLine("!!!!Wrong choice!!!!");
-                Console.WriteLine("If you want to exit, enter 0.");
-                errorLogger.LogD(exception.Message, exception);
-            }
-            catch (InvalidKeyException exception)
-            {
-                Console.WriteLine("!!!!Wrong key!!!!");
-                Console.WriteLine("If you want to exit, enter 0.");
-                Console.WriteLine(exception);
-                errorLogger.LogD(exception.Message, exception);
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An unexpected error occurred:");
-                Console.WriteLine(ex);
-                errorLogger.LogD(ex.Message, ex);
-            }
-
-
-        } while (true);
-
-        var service = new CipherService(_cipher);
-
-        while (true)
-        {
-            Console.WriteLine("\nSelect an action:");
-            Console.WriteLine("1. Encrypt text");
-            Console.WriteLine("2. Decipher the text");
-            Console.WriteLine("3. Change key");
-            Console.WriteLine("0. Exit");
-            Console.WriteLine("00. Choose cipher");
-
-            var input = Console.ReadLine();
-            string? text = null;
-            if (input == "0")
-            {
-                logger.LogD("Exit");
-                break;
-            }
-
-            try
-            {
-
-                switch (input)
+                catch (InvalidCipherChoiceException ex)
                 {
-                    case "1":
-                    {
-                        Console.Write("Enter the text: ");
-                        break;
-                    }
-                    case "2":
-                    {
-                        Console.Write("Enter encrypted text: ");
-                        break;
-                    }
-                    case "3":
-                        Console.Write("Enter new key: ");
-                        _key = Console.ReadLine();
-                        if (string.IsNullOrEmpty(_key))
-                            throw new InvalidKeyException("Invalid key");
-                        _cipher.SetKey(_key);
-                        logger.LogD("Key changed", _key);
-                        break;
-                    case "00":
-                        logger.LogD("Cipher changed");
-                        goto choiceCipher;
-                    default:
-                        Console.WriteLine("!!!!!!!Invalid command!!!!!!!!!");
-                        break;
+                    Console.WriteLine("Invalid choice. Enter 0 to exit.");
+                    _errorLogger.LogD(ex.Message, ex);
+                }
+                catch (InvalidKeyException ex)
+                {
+                    Console.WriteLine("Invalid key. Enter 0 to exit.");
+                    _errorLogger.LogD(ex.Message, ex);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unexpected error: {ex.Message}");
+                    _errorLogger.LogD(ex.Message, ex);
+                }
+            }
+
+            var service = new CipherService(cipher);
+
+            while (true)
+            {
+                Console.WriteLine("\nSelect an action:");
+                Console.WriteLine("1. Encrypt text");
+                Console.WriteLine("2. Decrypt text");
+                Console.WriteLine("3. Change key");
+                Console.WriteLine("00. Choose a different cipher");
+                Console.WriteLine("0. Exit");
+
+                string? input = Console.ReadLine();
+
+                if (input == "0")
+                {
+                    _logger.LogD("Exit");
+                    break;
                 }
 
-
-                if (input != "3" && !string.IsNullOrEmpty(input) && input is "1" or "2")
+                if (input == "00")
                 {
-                    text = Console.ReadLine();
-                    // if (string.IsNullOrEmpty(text))
-                    // {
-                    //     throw new InvalidTextException("Invalid text");
-                    // }
+                    _logger.LogD("Cipher change requested");
+                    restart = true;
+                    break;
+                }
 
+                try
+                {
                     switch (input)
                     {
                         case "1":
                         {
-                            var encrypted = service.EncryptText(text);
-                            Console.WriteLine($"Encrypted text: {encrypted}");
-                            _sessionManager.LogOperation(true, text, encrypted, _key);
-                            logger.LogD("Text encrypted", text);
+                            Console.Write("Enter text to encrypt: ");
+                            string text = Console.ReadLine() ?? "";
+                            string encrypted = service.EncryptText(text);
+                            Console.WriteLine($"Encrypted: {encrypted}");
+                            sessionManager!.LogOperation(true, text, encrypted, key);
+                            _logger.LogD("Encrypted", text);
                             break;
                         }
                         case "2":
                         {
-                            var decrypted = service.DecryptText(text);
-                            Console.WriteLine($"Decrypted text: {decrypted}");
-                            _sessionManager.LogOperation(false, text, decrypted, _key);
-                            logger.LogD("Text decrypted", text);
+                            Console.Write("Enter text to decrypt: ");
+                            string text = Console.ReadLine() ?? "";
+                            string decrypted = service.DecryptText(text);
+                            Console.WriteLine($"Decrypted: {decrypted}");
+                            sessionManager!.LogOperation(false, text, decrypted, key);
+                            _logger.LogD("Decrypted", text);
                             break;
                         }
+                        case "3":
+                        {
+                            Console.Write("Enter new key: ");
+                            string newKey = Console.ReadLine() ?? "";
+                            if (string.IsNullOrEmpty(newKey))
+                                throw new InvalidKeyException("Invalid key");
+                            key = newKey;
+                            cipher.SetKey(key);
+                            _logger.LogD("Key changed", key);
+                            break;
+                        }
+                        default:
+                            Console.WriteLine("Invalid command.");
+                            break;
                     }
                 }
-
+                catch (InvalidKeyException ex)
+                {
+                    Console.WriteLine("Invalid key.");
+                    _errorLogger.LogD(ex.Message, ex);
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Input error: {ex.Message}");
+                    _errorLogger.LogD(ex.Message, ex);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unexpected error: {ex.Message}");
+                    _errorLogger.LogD(ex.Message, ex);
+                }
             }
-            catch (InvalidTextException exception)
+
+            if (!restart && sessionManager != null)
             {
-                Console.WriteLine("!!!!Wrong text!!!!");
-                Console.WriteLine("If you want to exit, enter 0.");
-                Console.WriteLine(exception);
-                errorLogger.LogD(exception.Message, exception);
-
+                SaveSessions(sessionManager);
             }
-            catch (InvalidKeyException exception)
-            {
-                Console.WriteLine("!!!!Wrong key!!!!");
-                Console.WriteLine("If you want to exit, enter 0.");
-                Console.WriteLine(exception);
-                errorLogger.LogD(exception.Message, exception);
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An unexpected error occurred:");
-                Console.WriteLine(ex);
-                errorLogger.LogD(ex.Message, ex);
+        } while (restart);
+    }
 
-            }
-        }
-        var allSessions = _sessionManager.GetAllSessions();
-        string directoryPath = @"C:\Users\Ричи\RiderProjects\CipherSolution\CipherLib\Prototype\data";
-
-        if (!Directory.Exists(directoryPath))
+    private static void SaveSessions(EncryptionSessionManager sessionManager)
+    {
+        try
         {
+            string directoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "sessions");
             Directory.CreateDirectory(directoryPath);
+
+            string filePath = Path.Combine(directoryPath, "allSessions.json");
+            string json = JsonSerializer.Serialize(
+                sessionManager.GetAllSessions(),
+                new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(filePath, json);
+            Console.WriteLine($"Session data saved to: {filePath}");
         }
-
-        string filePath = Path.Combine(directoryPath, "allSessions.json");
-
-        var options = new JsonSerializerOptions
+        catch (Exception ex)
         {
-            WriteIndented = true
-        };
-
-        string json = JsonSerializer.Serialize(allSessions, options);
-
-        File.WriteAllText(filePath, json);
-
-        Console.WriteLine($"Данные успешно сохранены в файл: {filePath}");
+            Console.WriteLine($"Failed to save session data: {ex.Message}");
+        }
     }
 }

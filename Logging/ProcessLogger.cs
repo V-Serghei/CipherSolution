@@ -1,23 +1,18 @@
-﻿namespace Logging;
+namespace Logging;
 
 public sealed class ProcessLogger
 {
-    private static ProcessLogger _instance;
-    private static readonly object Lock = new object();
-    private string logFilePath;
-    private ProcessLogger() { 
-        var currentDirectory = "C:\\Users\\Ричи\\RiderProjects\\CipherSolution\\Logging";
-        var logDirectory = Path.Combine(currentDirectory, "DataLog");
+    private static ProcessLogger? _instance;
+    private static readonly object Lock = new();
+    private readonly string _logFilePath;
 
-        if(!Directory.Exists(logDirectory))
-        {
-            Directory.CreateDirectory(logDirectory);
-        }
-
-        logFilePath = Path.Combine(logDirectory, "ProcessLog.log");
-        
+    private ProcessLogger()
+    {
+        string logDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "process");
+        Directory.CreateDirectory(logDirectory);
+        _logFilePath = Path.Combine(logDirectory, "ProcessLog.log");
     }
-    
+
     public static ProcessLogger Instance
     {
         get
@@ -26,22 +21,16 @@ public sealed class ProcessLogger
             {
                 lock (Lock)
                 {
-                    if (_instance == null)
-                    {
-                        _instance = new ProcessLogger();
-                    }
+                    _instance ??= new ProcessLogger();
                 }
             }
-
             return _instance;
         }
     }
 
-    public void LogD(string message, string result = "Succese")
+    public void LogD(string message, string result = "Success")
     {
-        var timestamp = DateTime.Now;
-        string logMessage = $"[LOG] {timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff")}: Message: {message} - Result: {result}";
-
-        File.AppendAllText(logFilePath, logMessage + Environment.NewLine);
+        string logMessage = $"[LOG] {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}: {message} - Result: {result}";
+        File.AppendAllText(_logFilePath, logMessage + Environment.NewLine);
     }
 }
