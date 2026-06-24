@@ -95,23 +95,26 @@
                                  AcceptsReturn="False"
                                  Text="KEY" />
 
+                        <Label Content="Alphabet variant" Margin="0,16,0,0" />
+                        <ComboBox x:Name="AlphabetVariantComboBox">
+                            <ComboBoxItem Content="auto" IsSelected="True" />
+                            <ComboBoxItem Content="eng" />
+                            <ComboBoxItem Content="rus" />
+                            <ComboBoxItem Content="rus+eng" />
+                            <ComboBoxItem Content="eng+num" />
+                            <ComboBoxItem Content="rus+num" />
+                            <ComboBoxItem Content="rus+eng+num" />
+                            <ComboBoxItem Content="eng+sym" />
+                            <ComboBoxItem Content="rus+sym" />
+                            <ComboBoxItem Content="rus+eng+sym" />
+                            <ComboBoxItem Content="eng+num+sym" />
+                            <ComboBoxItem Content="rus+num+sym" />
+                            <ComboBoxItem Content="rus+eng+num+sym" />
+                        </ComboBox>
+
                         <StackPanel x:Name="BuilderOptionsPanel" Visibility="Collapsed">
                             <Label Content="Salt" Margin="0,16,0,0" />
                             <TextBox x:Name="SaltTextBox" AcceptsReturn="False" />
-
-                            <Label Content="Alphabet variant" Margin="0,16,0,0" />
-                            <ComboBox x:Name="AlphabetVariantComboBox">
-                                <ComboBoxItem Content="eng" IsSelected="True" />
-                                <ComboBoxItem Content="rus" />
-                                <ComboBoxItem Content="rus+eng" />
-                                <ComboBoxItem Content="eng+num" />
-                                <ComboBoxItem Content="rus+num" />
-                                <ComboBoxItem Content="eng+sym" />
-                                <ComboBoxItem Content="rus+sym" />
-                                <ComboBoxItem Content="eng+num+sym" />
-                                <ComboBoxItem Content="rus+num+sym" />
-                                <ComboBoxItem Content="rus+eng+num+sym" />
-                            </ComboBox>
 
                             <CheckBox x:Name="ErrorLoggingCheckBox"
                                       Content="Enable error logging"

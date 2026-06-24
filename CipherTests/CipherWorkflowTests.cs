@@ -15,10 +15,11 @@ public class CipherWorkflowTests
             Key = "KEY"
         });
 
-        string encrypted = workflow.Encrypt("HELLO WORLD");
+        const string original = "HELLO WORLD";
+        string encrypted = workflow.Encrypt(original);
 
-        Assert.That(encrypted, Is.Not.EqualTo("HELLO WORLD"));
-        Assert.That(workflow.Decrypt(encrypted), Is.EqualTo("HELLO WORLD"));
+        Assert.That(encrypted, Is.Not.EqualTo(original));
+        Assert.That(workflow.Decrypt(encrypted), Is.EqualTo(original));
     }
 
     [Test]
@@ -28,47 +29,18 @@ public class CipherWorkflowTests
         {
             Mode = CipherWorkflowMode.Factory,
             CipherType = CipherType.Vigenere,
-            Key = "КЛЮЧ"
+            Key = "\u041a\u041b\u042e\u0427"
         });
 
-        string encrypted = workflow.Encrypt("ПРИВЕТ МИР");
+        const string original = "\u041f\u0420\u0418\u0412\u0415\u0422 \u041c\u0418\u0420";
+        string encrypted = workflow.Encrypt(original);
 
-        Assert.That(encrypted, Is.Not.EqualTo("ПРИВЕТ МИР"));
-        Assert.That(workflow.Decrypt(encrypted), Is.EqualTo("ПРИВЕТ МИР"));
+        Assert.That(encrypted, Is.Not.EqualTo(original));
+        Assert.That(workflow.Decrypt(encrypted), Is.EqualTo(original));
     }
 
     [Test]
-    public void Factory_RussianTextWithEnglishKey_ThrowsClearError()
-    {
-        var workflow = new CipherWorkflow(new CipherWorkflowOptions
-        {
-            Mode = CipherWorkflowMode.Factory,
-            CipherType = CipherType.Vigenere,
-            Key = "KEY"
-        });
-
-        var ex = Assert.Throws<ArgumentException>(() => workflow.Encrypt("ПРИВЕТ"));
-
-        Assert.That(ex!.Message, Does.Contain("Russian text requires a Russian key"));
-    }
-
-    [Test]
-    public void Factory_NumbersOnlyText_ThrowsClearError()
-    {
-        var workflow = new CipherWorkflow(new CipherWorkflowOptions
-        {
-            Mode = CipherWorkflowMode.Factory,
-            CipherType = CipherType.Vigenere,
-            Key = "KEY"
-        });
-
-        var ex = Assert.Throws<ArgumentException>(() => workflow.Encrypt("123"));
-
-        Assert.That(ex!.Message, Does.Contain("includes numbers"));
-    }
-
-    [Test]
-    public void Factory_KeyWithNumbers_ThrowsClearError()
+    public void FactoryAuto_EncryptDecrypt_Numbers()
     {
         var workflow = new CipherWorkflow(new CipherWorkflowOptions
         {
@@ -77,9 +49,61 @@ public class CipherWorkflowTests
             Key = "123KEY"
         });
 
-        var ex = Assert.Throws<ArgumentException>(() => workflow.Encrypt("HELLO"));
+        const string original = "123231";
+        string encrypted = workflow.Encrypt(original);
 
-        Assert.That(ex!.Message, Does.Contain("includes numbers"));
+        Assert.That(encrypted, Is.Not.EqualTo(original));
+        Assert.That(workflow.Decrypt(encrypted), Is.EqualTo(original));
+    }
+
+    [Test]
+    public void FactoryAuto_EncryptDecrypt_EnglishNumbers()
+    {
+        var workflow = new CipherWorkflow(new CipherWorkflowOptions
+        {
+            Mode = CipherWorkflowMode.Factory,
+            CipherType = CipherType.Vigenere,
+            Key = "KEY123"
+        });
+
+        const string original = "HELLO123";
+        string encrypted = workflow.Encrypt(original);
+
+        Assert.That(encrypted, Is.Not.EqualTo(original));
+        Assert.That(workflow.Decrypt(encrypted), Is.EqualTo(original));
+    }
+
+    [Test]
+    public void FactoryAuto_EncryptDecrypt_MixedRussianEnglishNumbers()
+    {
+        var workflow = new CipherWorkflow(new CipherWorkflowOptions
+        {
+            Mode = CipherWorkflowMode.Factory,
+            CipherType = CipherType.Vigenere,
+            Key = "\u041aEY123"
+        });
+
+        const string original = "\u041f\u0420\u0418\u0412\u0415\u0422 HELLO 123";
+        string encrypted = workflow.Encrypt(original);
+
+        Assert.That(encrypted, Is.Not.EqualTo(original));
+        Assert.That(workflow.Decrypt(encrypted), Is.EqualTo(original));
+    }
+
+    [Test]
+    public void ManualEnglishAlphabet_Numbers_ThrowsClearError()
+    {
+        var workflow = new CipherWorkflow(new CipherWorkflowOptions
+        {
+            Mode = CipherWorkflowMode.BuilderManual,
+            CipherType = CipherType.Vigenere,
+            Key = "KEY",
+            AlphabetVariant = "eng"
+        });
+
+        var ex = Assert.Throws<ArgumentException>(() => workflow.Encrypt("123"));
+
+        Assert.That(ex!.Message, Does.Contain("does not allow numbers"));
     }
 
     [Test]
@@ -89,11 +113,11 @@ public class CipherWorkflowTests
         {
             Mode = CipherWorkflowMode.BuilderManual,
             CipherType = CipherType.Vigenere,
-            Key = "КEY",
+            Key = "\u041aEY",
             AlphabetVariant = "rus+eng"
         });
 
-        const string original = "ПРИВЕТ HELLO";
+        const string original = "\u041f\u0420\u0418\u0412\u0415\u0422 HELLO";
         string encrypted = workflow.Encrypt(original);
 
         Assert.That(encrypted, Is.Not.EqualTo(original));
@@ -125,10 +149,10 @@ public class CipherWorkflowTests
         {
             Mode = CipherWorkflowMode.BuilderDefault,
             CipherType = CipherType.Vigenere,
-            Key = "КЛЮЧ"
+            Key = "\u041a\u041b\u042e\u0427"
         });
 
-        var ex = Assert.Throws<ArgumentException>(() => workflow.Encrypt("ПРИВЕТ"));
+        var ex = Assert.Throws<ArgumentException>(() => workflow.Encrypt("\u041f\u0420\u0418\u0412\u0415\u0422"));
 
         Assert.That(ex!.Message, Does.Contain("English only"));
     }

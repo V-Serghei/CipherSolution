@@ -15,7 +15,7 @@ The project supports four cipher algorithms:
 
 Supported alphabets include English, Russian, and extended variants with digits and symbols depending on configuration.
 
-The desktop UI uses the same cipher creation paths as the console application and validates key/text alphabet compatibility before running an operation.
+The desktop UI uses the same cipher creation paths as the console application and adds an `auto` alphabet mode for practical input. In `auto` mode it detects English, Russian, numbers, symbols, and mixed English/Russian text before running an operation.
 
 ## Tech Stack
 

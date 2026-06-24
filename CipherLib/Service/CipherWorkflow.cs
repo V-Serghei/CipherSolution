@@ -2,6 +2,7 @@ using System.Text.Json;
 using CipherLib.AbstractFactory;
 using CipherLib.AbstractFactory.AbstractFactoryConcrete;
 using CipherLib.Builder;
+using CipherLib.CipherCore;
 using CipherLib.ConstVal;
 using CipherLib.Entities;
 using CipherLib.Factory;
@@ -23,7 +24,7 @@ public sealed class CipherWorkflowOptions
     public CipherType CipherType { get; init; } = CipherType.Vigenere;
     public string Key { get; init; } = "";
     public string Salt { get; init; } = "";
-    public string AlphabetVariant { get; init; } = "eng";
+    public string AlphabetVariant { get; init; } = "auto";
     public bool ErrorLogging { get; init; }
     public bool ProcessLogging { get; init; }
 }
@@ -31,8 +32,6 @@ public sealed class CipherWorkflowOptions
 public sealed class CipherWorkflow
 {
     private readonly CipherWorkflowOptions _options;
-    private readonly ICipher _cipher;
-    private readonly CipherService _service;
     private readonly EncryptionSessionManager _sessionManager;
 
     public CipherWorkflow(CipherWorkflowOptions options)
@@ -44,15 +43,14 @@ public sealed class CipherWorkflow
             throw new ArgumentException("Key cannot be empty.");
         }
 
-        _cipher = CreateCipher(options);
-        _service = new CipherService(_cipher);
         _sessionManager = new EncryptionSessionManager(options.Key);
     }
 
     public string Encrypt(string text)
     {
-        ValidateInput(text, isEncryption: true);
-        string output = _service.EncryptText(text);
+        string alphabetVariant = ValidateInput(text, isEncryption: true);
+        CipherService service = new(CreateCipher(_options, alphabetVariant));
+        string output = service.EncryptText(text);
         _sessionManager.LogOperation(true, text, output, _options.Key);
         SaveSessions();
         return output;
@@ -60,28 +58,34 @@ public sealed class CipherWorkflow
 
     public string Decrypt(string text)
     {
-        ValidateInput(text, isEncryption: false);
-        string output = _service.DecryptText(text);
+        string alphabetVariant = ValidateInput(text, isEncryption: false);
+        CipherService service = new(CreateCipher(_options, alphabetVariant));
+        string output = service.DecryptText(text);
         _sessionManager.LogOperation(false, text, output, _options.Key);
         SaveSessions();
         return output;
     }
 
-    private static ICipher CreateCipher(CipherWorkflowOptions options)
+    private static ICipher CreateCipher(CipherWorkflowOptions options, string alphabetVariant)
     {
         return options.Mode switch
         {
-            CipherWorkflowMode.Factory => CreateFactoryCipher(options),
+            CipherWorkflowMode.Factory => CreateFactoryCipher(options, alphabetVariant),
             CipherWorkflowMode.BuilderDefault => CreateDefaultBuilderCipher(options),
-            CipherWorkflowMode.BuilderManual => CreateManualBuilderCipher(options),
-            CipherWorkflowMode.AbstractFactory => CreateAbstractFactoryCipher(options),
+            CipherWorkflowMode.BuilderManual => CreateManualBuilderCipher(options, alphabetVariant),
+            CipherWorkflowMode.AbstractFactory => CreateAbstractFactoryCipher(options, alphabetVariant),
             _ => throw new InvalidOperationException("Unknown cipher workflow mode.")
         };
     }
 
-    private static ICipher CreateFactoryCipher(CipherWorkflowOptions options)
+    private static ICipher CreateFactoryCipher(CipherWorkflowOptions options, string alphabetVariant)
     {
-        return CipherFactory.GetCipherCreator(GetCipherFactoryChoice(options.CipherType)).CreateCipher(options.Key);
+        if (alphabetVariant is "eng" or "rus")
+        {
+            return CipherFactory.GetCipherCreator(GetCipherFactoryChoice(options.CipherType)).CreateCipher(options.Key);
+        }
+
+        return CreateCoreCipher(options.CipherType, options.Key, CreateCipherOptions(options, alphabetVariant));
     }
 
     private static ICipher CreateDefaultBuilderCipher(CipherWorkflowOptions options)
@@ -110,22 +114,22 @@ public sealed class CipherWorkflow
         return builder.Build();
     }
 
-    private static ICipher CreateManualBuilderCipher(CipherWorkflowOptions options)
+    private static ICipher CreateManualBuilderCipher(CipherWorkflowOptions options, string alphabetVariant)
     {
         ICipherBuilder builder = new CipherBuilder()
             .SetAlgorithmType(options.CipherType)
             .SetKey(options.Key)
             .SetSalt(options.Salt)
-            .SetLanguage(options.AlphabetVariant)
-            .AllowSymbols(VariantUsesSymbols(options.AlphabetVariant))
-            .AllowNumbers(VariantUsesNumbers(options.AlphabetVariant))
+            .SetLanguage(alphabetVariant)
+            .AllowSymbols(VariantUsesSymbols(alphabetVariant))
+            .AllowNumbers(VariantUsesNumbers(alphabetVariant))
             .EnableErrorLogging(options.ErrorLogging)
             .EnableProcessLogging(options.ProcessLogging);
 
         return builder.Build();
     }
 
-    private static ICipher CreateAbstractFactoryCipher(CipherWorkflowOptions options)
+    private static ICipher CreateAbstractFactoryCipher(CipherWorkflowOptions options, string alphabetVariant)
     {
         ICipherComponentsFactory factory = options.CipherType switch
         {
@@ -136,18 +140,11 @@ public sealed class CipherWorkflow
             _ => throw new ArgumentException("Unknown cipher type.")
         };
 
-        CipherOptions cipherOptions = new(
-            useExplicitAlphabet: false,
-            alphabetVariant: "eng",
-            allowSymbols: false,
-            allowNumbers: false,
-            errorLogging: true,
-            processLogging: true);
-
+        CipherOptions cipherOptions = CreateCipherOptions(options, alphabetVariant);
         return factory.CreateCipher(factory.CreateConfiguration(options.Key, cipherOptions));
     }
 
-    private void ValidateInput(string text, bool isEncryption)
+    private string ValidateInput(string text, bool isEncryption)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
@@ -167,52 +164,72 @@ public sealed class CipherWorkflow
         if (_options.Mode == CipherWorkflowMode.BuilderDefault)
         {
             ValidateExplicitAlphabet(text, effectiveKey, "eng");
-            return;
+            return "eng";
         }
 
-        if (_options.Mode == CipherWorkflowMode.BuilderManual)
-        {
-            ValidateExplicitAlphabet(text, effectiveKey, _options.AlphabetVariant);
-            return;
-        }
-
-        ValidateAutoDetectedAlphabet(text, effectiveKey);
+        string alphabetVariant = ResolveAlphabetVariant(text, effectiveKey, _options.AlphabetVariant);
+        ValidateExplicitAlphabet(text, effectiveKey, alphabetVariant);
+        return alphabetVariant;
     }
 
-    private static void ValidateAutoDetectedAlphabet(string text, string key)
+    private static CipherOptions CreateCipherOptions(CipherWorkflowOptions options, string alphabetVariant)
     {
-        if (HasDigits(text + key))
+        return new CipherOptions(
+            useExplicitAlphabet: true,
+            alphabetVariant: alphabetVariant,
+            allowSymbols: VariantUsesSymbols(alphabetVariant),
+            allowNumbers: VariantUsesNumbers(alphabetVariant),
+            errorLogging: options.ErrorLogging,
+            processLogging: options.ProcessLogging);
+    }
+
+    private static ICipher CreateCoreCipher(CipherType cipherType, string key, CipherOptions options)
+    {
+        return cipherType switch
         {
-            throw new ArgumentException("Factory and Abstract Factory modes encrypt letters only. Use Builder - Manual with an alphabet variant that includes numbers.");
+            CipherType.Vigenere => new VigenereCipher(key, options),
+            CipherType.Beaufort => new BeaufortCipher(key, options),
+            CipherType.AutoKey => new AutoKeyCipher(key, options),
+            CipherType.RunningKey => new RunningKeyCipher(key, options),
+            _ => throw new ArgumentException("Unknown cipher type.")
+        };
+    }
+
+    private static string ResolveAlphabetVariant(string text, string key, string selectedVariant)
+    {
+        if (!selectedVariant.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        {
+            return selectedVariant;
         }
 
-        if (HasSymbols(text + key))
+        string value = text + key;
+        bool hasRussian = HasRussianLetters(value);
+        bool hasEnglish = HasEnglishLetters(value);
+        bool hasDigits = HasDigits(value);
+        bool hasSymbols = HasSymbols(value);
+
+        if (!hasRussian && !hasEnglish && !hasDigits && !hasSymbols)
         {
-            throw new ArgumentException("Factory and Abstract Factory modes encrypt letters and spaces only. Use Builder - Manual with an alphabet variant that includes symbols.");
+            throw new ArgumentException("Text or key must contain characters that can be encrypted.");
         }
 
-        bool textHasRussian = HasRussianLetters(text);
-        bool textHasEnglish = HasEnglishLetters(text);
+        string variant = hasRussian && hasEnglish
+            ? "rus+eng"
+            : hasRussian
+                ? "rus"
+                : "eng";
 
-        if (!textHasRussian && !textHasEnglish)
+        if (hasDigits)
         {
-            throw new ArgumentException("Text must contain letters to be encrypted in this mode.");
+            variant += "+num";
         }
 
-        if (textHasRussian && textHasEnglish)
+        if (hasSymbols)
         {
-            throw new ArgumentException("Factory and Abstract Factory modes use one detected alphabet. Use Builder - Manual with rus+eng for mixed Russian and English text.");
+            variant += "+sym";
         }
 
-        if (textHasRussian && !HasRussianLetters(key))
-        {
-            throw new ArgumentException("Russian text requires a Russian key. Example: КЛЮЧ.");
-        }
-
-        if (textHasEnglish && !HasEnglishLetters(key))
-        {
-            throw new ArgumentException("English text requires an English key. Example: KEY.");
-        }
+        return variant;
     }
 
     private static void ValidateExplicitAlphabet(string text, string key, string alphabetVariant)
@@ -269,7 +286,7 @@ public sealed class CipherWorkflow
 
     private static bool HasRussianLetters(string value)
     {
-        return value.Any(c => (c >= 'А' && c <= 'я') || c == 'Ё' || c == 'ё');
+        return value.Any(c => (c >= '\u0410' && c <= '\u044f') || c == '\u0401' || c == '\u0451');
     }
 
     private static bool HasEnglishLetters(string value)
