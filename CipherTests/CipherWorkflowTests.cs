@@ -91,6 +91,25 @@ public class CipherWorkflowTests
     }
 
     [Test]
+    public void FactoryAuto_MixedRussianEnglishNumbers_ChangesEverySupportedCharacter()
+    {
+        var workflow = new CipherWorkflow(new CipherWorkflowOptions
+        {
+            Mode = CipherWorkflowMode.Factory,
+            CipherType = CipherType.Vigenere,
+            Key = "\u041aEY123"
+        });
+
+        const string original = "\u041fA1";
+        string encrypted = workflow.Encrypt(original);
+
+        Assert.That(encrypted[0], Is.Not.EqualTo(original[0]));
+        Assert.That(encrypted[1], Is.Not.EqualTo(original[1]));
+        Assert.That(encrypted[2], Is.Not.EqualTo(original[2]));
+        Assert.That(workflow.Decrypt(encrypted), Is.EqualTo(original));
+    }
+
+    [Test]
     public void ManualEnglishAlphabet_Numbers_ThrowsClearError()
     {
         var workflow = new CipherWorkflow(new CipherWorkflowOptions
